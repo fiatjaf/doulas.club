@@ -1,0 +1,9 @@
+*.swp
+*.swo
+node_modules
+*.pyc
+*.pyo
+*.js
+*.css
+data
+docs
