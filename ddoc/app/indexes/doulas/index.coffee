@@ -26,3 +26,5 @@
   if doc.coords
     index 'lat', doc.coords.lat
     index 'lng', doc.coords.lng
+
+  index 'random', Math.random()
