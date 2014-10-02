@@ -36,6 +36,22 @@ ResultsPage = React.createClass
           @fetchResults()
           localStorage.setItem 'coords', JSON.stringify @coords.ip
 
+  componentDidUpdate: ->
+    @applyMasonry()
+
+  applyMasonry: ->
+    container = @refs.results.getDOMNode()
+    imagesLoaded container, =>
+      @masonry = new Masonry container, {
+        columnWidth: 320
+        itemSelector: '.doula-card'
+      }
+      @masonry.bindResize()
+
+  updateMasonry: ->
+    if @masonry
+      setTimeout (=> @masonry.layout()), 401
+
   render: ->
     (div
       className: 'search'
@@ -44,7 +60,7 @@ ResultsPage = React.createClass
         onSubmit: @fetchResults
       ,
         (input
-          placeholder: 'Procure por nomes, cidades, recursos...'
+          placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
           name: 'q'
           ref: 'q'
           onChange: @prepareFetch
@@ -55,8 +71,20 @@ ResultsPage = React.createClass
           'PROCURAR'
         )
       )
-      (div className: 'results',
-        (DoulaCard row.doc) for row in @state.rows
+      (div
+        className: 'results'
+        ref: 'results'
+      ,
+        (=>
+          cards = []
+          for row in @state.rows
+            props = row.doc
+            props.onMouseEnter = @updateMasonry
+            props.onMouseLeave = @updateMasonry
+            props.key = row.id
+            cards.push (DoulaCard props)
+          return cards
+        )()
       )
     )
 
@@ -103,6 +131,8 @@ DoulaCard = React.createClass
     (div
       className: 'doula-card' +
                  if not @props.foto then ' no-foto' else ''
+      onMouseEnter: @props.onMouseEnter
+      onMouseLeave: @props.onMouseLeave
     ,
       (h2 {}, @props.nome) if not @props.foto
       (header {},
@@ -111,9 +141,9 @@ DoulaCard = React.createClass
           (li {}, "#{@props.cidade} #{
             if @props['região'] then ' (' + @props['região'] + ')' else ''
           }")
-          (li {}, tel) for tel in [].concat @props.tel if @props.tel
-          (li {}, email) for email in [].concat @props.email if @props.email
-          (li {}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site
+          (li {key: tel}, tel) for tel in [].concat @props.tel if @props.tel
+          (li {key: email}, email) for email in [].concat @props.email if @props.email
+          (li {key: site}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site
           (li {}, (a {href: @props.facebook, target: '_blank'}, @props.facebook.split('/').slice(-1)[0])) if @props.facebook
         )
       )

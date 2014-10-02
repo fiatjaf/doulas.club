@@ -20,6 +20,9 @@ Html = React.createClass
         (meta charSet: 'utf-8')
         (link rel: 'stylesheet', href: 'http://cdn.rawgit.com/picnicss/picnic/master/releases/v1.1.min.css')
         (link rel: 'stylesheet', href: '/assets/style.css')
+        (link rel: 'stylesheet', href: 'http://fonts.googleapis.com/css?family=Cookie|Noto+Sans')
+        (script src: 'http://rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min.js')
+        (script src: 'http://cdn.jsdelivr.net/masonry/3.1.5/masonry.min.js')
         (title {},
           if @props.title then @props.title + ' | dou.land'
           else 'dou.land, o diretório brasileiro de doulas'
