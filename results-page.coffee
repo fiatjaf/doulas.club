@@ -8,6 +8,8 @@ marked = require 'marked'
  form, input, button} = React.DOM
 
 superagent = require 'superagent'
+{Link} = require './react-router'
+
 localStorage = switch typeof window
   when 'undefined' then {getItem: (-> 'null'), setItem: (->)}
   else window.localStorage or {getItem: (-> 'null'), setItem: (->)}
@@ -134,9 +136,13 @@ DoulaCard = React.createClass
       onMouseEnter: @props.onMouseEnter
       onMouseLeave: @props.onMouseLeave
     ,
-      (h2 {}, @props.nome) if not @props.foto
+      (Link
+        href: '/doula/' + @props._id
+      , (h2 {}, @props.nome)) if not @props.foto
       (header {},
-        (img src: @props.foto) if @props.foto
+        (Link
+          href: '/doula/' + @props._id
+        , (img src: @props.foto)) if @props.foto
         (ul {},
           (li {}, "#{@props.cidade} #{
             if @props['região'] then ' (' + @props['região'] + ')' else ''
@@ -147,7 +153,9 @@ DoulaCard = React.createClass
           (li {}, (a {href: @props.facebook, target: '_blank'}, @props.facebook.split('/').slice(-1)[0])) if @props.facebook
         )
       )
-      (h2 {}, @props.nome) if @props.foto
+      (Link
+        href: '/doula/' + @props._id
+      , (h2 {}, @props.nome)) if @props.foto
       (div
         className: 'intro'
         dangerouslySetInnerHTML:

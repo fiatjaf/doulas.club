@@ -3,7 +3,8 @@ url = require 'url'
 express = require 'express'
 superagent = require 'superagent'
 React = require 'react'
-{Html, router} = require './client.coffee'
+HTML = require './html.coffee'
+router = require './client.coffee'
 
 renderApp = (req, res, next) ->
   path = url.parse(req.url).pathname
@@ -12,7 +13,7 @@ renderApp = (req, res, next) ->
     return next err if err
 
     title = data.nome if data.nome
-    app = Html title: title, body: handler(data)
+    app = HTML title: title, body: handler(data)
     markup = React.renderComponentToString app
     res.send "<!doctype html>\n" + markup + '<script>_data = ' + JSON.stringify(data) + '</script>'
 

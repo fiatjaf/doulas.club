@@ -1,4 +1,5 @@
 React = require 'react'
+superagent = require 'superagent'
 
 {html, body, meta, script, link, title,
  div, iframe, ul, li,
@@ -18,3 +19,9 @@ DoulaPage = React.createClass
     )
 
 module.exports = DoulaPage
+
+endpoint = if typeof window is 'undefined' then process.env.ENDPOINT else ''
+module.exports.fetchDoula = (props, cb) ->
+  superagent.get endpoint + '/api/doula/' + props.id, (err, res) ->
+    cb err, (res.body if res)
+

@@ -1,87 +1,18 @@
 React = require 'react'
-Router = require './router'
 superagent = require 'superagent'
 
+HTML = require './html'
 DoulaPage = require './doula-page'
 ResultsPage = require './results-page'
+RRouter = require './react-router'
+updatePage = RRouter.renderOrUpdatePage
 
-endpoint = 'http://162.243.206.108:3000'
-
-{html, body, meta, script, link, title,
- div, iframe, ul, li,
- span, a, h1, h2, h3, h4, img,
- form, input, button} = React.DOM
-
-FrozenHead = require 'react-frozenhead'
-Html = React.createClass
-  render: ->
-    (html {},
-      (FrozenHead {},
-        (meta charSet: 'utf-8')
-        (link rel: 'stylesheet', href: 'http://cdn.rawgit.com/picnicss/picnic/master/releases/v1.1.min.css')
-        (link rel: 'stylesheet', href: '/assets/style.css')
-        (link rel: 'stylesheet', href: 'http://fonts.googleapis.com/css?family=Cookie|Noto+Sans')
-        (script src: 'http://rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min.js')
-        (script src: 'http://cdn.jsdelivr.net/masonry/3.1.5/masonry.min.js')
-        (title {},
-          if @props.title then @props.title + ' | dou.land'
-          else 'dou.land, o diretório brasileiro de doulas'
-        )
-      )
-
-      (body {}, @props.body)
-
-      (script src: '/assets/bundle.js')
-      #(script
-      #  dangerouslySetInnerHTML:
-      #    __html: '''
-      #  (function(t,r,a,c,k){k=r.createElement('script');k.type='text/javascript';
-      #  k.async=true;k.src=a;r.getElementsByTagName('head')[0].appendChild(k);
-      #  t.maq=[];t.mai=c;t.ma=function(){t.maq.push(arguments)};
-      #  })(window,document,'http://static.microanalytics.alhur.es/tracker.js','b7nwbi38ahi6jk');
-
-      #  ma('pageView');
-      #    '''
-      #)
-    )
-
-Link = React.createClass
-  render: ->
-    (a
-      className: @props.className
-      href: @props.href
-      onClick: @handleClick
-    , @props.children)
-
-  handleClick: (e) ->
-    return if not history
-    e.preventDefault()
-    history.pushState null, null, @props.href
-    router.match @props.href, (err, handler, data) ->
-      return console.log err if err
-      updatePage handler, data
-
-module.exports =
-  Html: Html
-  Link: Link
-
-fetchDoula = (props, cb) ->
-  superagent.get endpoint + '/api/doula/' + props.id, (err, res) ->
-    cb err, (res.body if res)
-
-router = Router [
+router = RRouter [
   ['/', ResultsPage]
-  ['/doula/:id', fetchDoula, DoulaPage]
-]
+  ['/doula/:id', DoulaPage.fetchDoula, DoulaPage]
+], HTML
 
-module.exports.router = router
-
-APP = null
-updatePage = (handler, data) ->
-  documentTitle = data.nome if data.nome
-  history.replaceState data, documentTitle, location.href
-  APP = Html title: documentTitle, body: handler(data)
-  APP = React.renderComponent APP, document
+module.exports = router
 
 if typeof window isnt "undefined"
   window.onload = ->
