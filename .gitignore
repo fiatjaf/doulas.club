@@ -3,7 +3,7 @@
 node_modules
 *.pyc
 *.pyo
-*.js
+assets
 *.css
 data
 docs
