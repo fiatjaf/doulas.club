@@ -11,7 +11,10 @@ RRouter = (routes, htmlComponent) ->
 APP = null
 renderOrUpdatePage = (handler, data) ->
   documentTitle = data.nome if data.nome
-  history.replaceState data, documentTitle, location.href
+  try
+    history.replaceState {data: data, handler: handler}, documentTitle, location.href
+  catch e
+
   APP = HTML title: documentTitle, body: handler(data)
   APP = React.renderComponent APP, document
   APP

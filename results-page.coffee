@@ -143,7 +143,7 @@ DoulaCard = React.createClass
         (Link
           href: '/doula/' + @props._id
         , (img src: @props.foto)) if @props.foto
-        (ul {},
+        (ul className: 'attrs-list',
           (li {}, "#{@props.cidade} #{
             if @props['região'] then ' (' + @props['região'] + ')' else ''
           }")

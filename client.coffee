@@ -22,7 +22,7 @@ if typeof window isnt "undefined"
 
     window.onpopstate = (e) ->
       if e.state
-        updatePage handler, e.state
+        updatePage e.state.handler, e.state.data
       else
         router.match location.pathname, (err, handler, data) ->
           return console.log err if err
