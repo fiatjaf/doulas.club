@@ -20,6 +20,24 @@ html, body {
   margin-bottom: 60px;
 }
 
+.logo {
+  position: absolute;
+  color: @petroleum;
+  top: 10px;
+  left: 10px;
+
+  &.rotate {
+    top: 54px;
+    left: -35px;
+    transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    line-height: 35px;
+    color: white;
+  }
+}
+
 .search form {
   width: 100%;
   text-align: center;
@@ -123,6 +141,7 @@ html, body {
   }
 
   .top-bar {
+    position: relative;
     height: 220px;
     border: none;
     padding: 0;
@@ -130,7 +149,6 @@ html, body {
 
     & > div {
       height: 100%;
-      position: relative;
       padding: auto 8px;
       overflow: hidden;
       &:hover { overflow: auto; }
@@ -142,15 +160,9 @@ html, body {
       margin-bottom: 20px;
       padding: 0;
       &.replace-foto {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
         height: 50px;
         width: 98%;
-        margin: 0;
+        margin-top: 10%;
         text-align: center;
       }
     }

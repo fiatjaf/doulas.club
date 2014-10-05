@@ -14,8 +14,8 @@ module.exports = React.createClass
         (script src: 'http://rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min.js')
         (script src: 'http://cdn.jsdelivr.net/masonry/3.1.5/masonry.min.js')
         (title {},
-          if @props.title then @props.title + ' | dou.land'
-          else 'dou.land, o diretório brasileiro de doulas'
+          if @props.title then @props.title + ' | doulas.club'
+          else 'doulas.club - gestante, ache sua doula'
         )
       )
 

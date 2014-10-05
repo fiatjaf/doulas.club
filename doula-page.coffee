@@ -7,13 +7,20 @@ marked = require 'marked'
  span, a, h1, h2, h3, h4, img,
  form, input, button} = React.DOM
 
+{Link} = require './react-router'
+
 DoulaPage = React.createClass
   render: ->
     (div {className: 'doula-page' +
                      if @props.iframe then '' else ' no-iframe'},
       (div {className: 'top-bar'},
+        (span className: 'logo rotate',
+          (Link href: '/',
+            'doulas.club'
+          )
+        )
         (div className: 'full l-third',
-          (img src: @props.foto)
+          (img src: @props.foto) if @props.foto
           (h1 {className: 'replace-foto'}, @props.nome) if not @props.foto
         )
         (div className: 'full l-third',
@@ -24,7 +31,7 @@ DoulaPage = React.createClass
           )
         )
         (div className: 'full l-third',
-          (ul {className: '.attrs-list'},
+          (ul {className: 'attrs-list'},
             (li {}, "formada pelo #{@props['formação']}") if @props['formação']
             (li {}, "doula desde #{@props.desde}") if @props.desde
             (li {}, @props.cidade)

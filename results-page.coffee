@@ -26,19 +26,11 @@ ResultsPage = React.createClass
     local: JSON.parse localStorage.getItem 'coords'
 
   componentDidMount: ->
-    navigator.geolocation.getCurrentPosition (pos) =>
-      @coords.browser = pos.coords
-      @fetchResults()
-      localStorage.setItem 'coords', JSON.stringify @coords.browser
-
-    superagent.get 'http://freegeoip.net/json/', (err, res) =>
-      if not err
-        @coords.ip = res.body
-        if not @coords.browser
-          @fetchResults()
-          localStorage.setItem 'coords', JSON.stringify @coords.ip
+    @initialFetch()
 
   componentDidUpdate: ->
+    if not @state.rows.length
+      @initialFetch()
     @applyMasonry()
 
   applyMasonry: ->
@@ -54,6 +46,19 @@ ResultsPage = React.createClass
     if @masonry
       setTimeout (=> @masonry.layout()), 401
 
+  initialFetch: ->
+    navigator.geolocation.getCurrentPosition (pos) =>
+      @coords.browser = pos.coords
+      @fetchResults()
+      localStorage.setItem 'coords', JSON.stringify @coords.browser
+
+    superagent.get 'http://freegeoip.net/json/', (err, res) =>
+      if not err
+        @coords.ip = res.body
+        if not @coords.browser
+          @fetchResults()
+          localStorage.setItem 'coords', JSON.stringify @coords.ip
+
   render: ->
     (div
       className: 'search'
@@ -61,6 +66,9 @@ ResultsPage = React.createClass
       (form
         onSubmit: @fetchResults
       ,
+        (span className: 'logo',
+          'doulas.club'
+        )
         (input
           placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
           name: 'q'
