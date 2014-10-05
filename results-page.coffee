@@ -129,12 +129,15 @@ ResultsPage = React.createClass
       setTimeout (=> @fetchResults q), 2000
 
 DoulaCard = React.createClass
+  getInitialState: ->
+    iframe: false
+
   render: ->
     (div
       className: 'doula-card' +
                  if not @props.foto then ' no-foto' else ''
-      onMouseEnter: @props.onMouseEnter
-      onMouseLeave: @props.onMouseLeave
+      onMouseEnter: @handleMouseEnter
+      onMouseLeave: @handleMouseLeave
     ,
       (Link
         href: '/doula/' + @props._id
@@ -162,6 +165,19 @@ DoulaCard = React.createClass
         dangerouslySetInnerHTML:
           __html: marked @props.intro
       ) if @props.intro
+      (iframe
+        src: @props.iframe
+      ) if @state.iframe and @props.iframe
     )
+
+  handleMouseEnter: ->
+    @props.onMouseEnter()
+    setTimeout (=>
+      @timeout = @setState iframe: true
+    ), 250
+
+  handleMouseLeave: ->
+    clearTimeout @timeout
+    @props.onMouseLeave()
 
 module.exports = ResultsPage
