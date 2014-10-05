@@ -95,7 +95,7 @@ ResultsPage = React.createClass
   fetchResults: (q, e) ->
     if q and q.preventDefault
       q.preventDefault()
-    if e and e.preventDefault()
+    if e and e.preventDefault
       e.preventDefault()
 
     clearTimeout @timeout
@@ -138,15 +138,15 @@ DoulaCard = React.createClass
     ,
       (Link
         href: '/doula/' + @props._id
+        data: @props
       , (h2 {}, @props.nome)) if not @props.foto
       (header {},
         (Link
           href: '/doula/' + @props._id
+          data: @props
         , (img src: @props.foto)) if @props.foto
         (ul className: 'attrs-list',
-          (li {}, "#{@props.cidade} #{
-            if @props['região'] then ' (' + @props['região'] + ')' else ''
-          }")
+          (li {}, @props.cidade)
           (li {key: tel}, tel) for tel in [].concat @props.tel if @props.tel
           (li {key: email}, email) for email in [].concat @props.email if @props.email
           (li {key: site}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site
@@ -155,6 +155,7 @@ DoulaCard = React.createClass
       )
       (Link
         href: '/doula/' + @props._id
+        data: @props
       , (h2 {}, @props.nome)) if @props.foto
       (div
         className: 'intro'

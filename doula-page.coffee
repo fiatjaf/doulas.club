@@ -27,9 +27,8 @@ DoulaPage = React.createClass
           (ul {className: '.attrs-list'},
             (li {}, "formada pelo #{@props['formação']}") if @props['formação']
             (li {}, "doula desde #{@props.desde}") if @props.desde
-            (li {}, "#{@props.cidade} #{
-              if @props['região'] then ' (' + @props['região'] + ')' else ''
-            }")
+            (li {}, @props.cidade)
+            (li {}, 'atende: ' + @props['região']) if @props['região']
             (li {key: tel}, tel) for tel in [].concat @props.tel if @props.tel
             (li {key: email}, email) for email in [].concat @props.email if @props.email
             (li {key: site}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site

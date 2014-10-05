@@ -1,6 +1,7 @@
-@blue: #1659A2;
+@blue: #3D6D96;
 @orange: #F2873F;
 @pink: #DD7E7E;
+@petroleum: #60A794;
 
 * { box-sizing: border-box; font-family: 'Noto Sans', 'Ubuntu'; }
 html, body {
@@ -38,11 +39,12 @@ html, body {
     padding: 7px;
     width: 300px;
     max-height: 340px;
-    color: #333; a { color: #555; }
+    color: #333; a { color: @petroleum; }
     &.no-foto {
+      h2 { color: #775D4A !important; float: none !important; }
       ul { width: 96%; }
       header { max-height: 140px; }
-      .intro { max-height: 165px; }
+      .intro { max-height: 119px; }
     }
     &:hover, &.no-foto:hover {
       max-height: 480px;
@@ -53,7 +55,8 @@ html, body {
     -moz-transition: max-height 0.8s;
 
     header {
-      max-height: 167px;
+      overflow: hidden;
+      max-height: 150px;
 
       img {
         float: left;
@@ -75,12 +78,13 @@ html, body {
       }
     }
     h2 {
+      color: #CFB96D;
       display: block;
-      height: 40px;
-      line-height: 40px;
+      height: 32px;
+      line-height: 32px;
       margin-left: 2%;
       margin-right: 2%;
-      margin-top: 2px;
+      margin-top: 14px;
       padding: 0;
       font-size: 2.1em;
       overflow: hidden;
@@ -89,7 +93,8 @@ html, body {
     }
     .intro {
       float: left;
-      max-height: 138px;
+      line-height: 1.5em;
+      max-height: 128px;
       margin: 2px 2%;
       font-size: 0.8em;
       overflow: hidden;
@@ -109,7 +114,7 @@ html, body {
   background-color: #F2873F;
   color: white;
   &.no-iframe {
-    background-color: #1659A2;
+    background-color: @blue;
     padding-top: 15%;
   }
 
@@ -151,6 +156,7 @@ html, body {
   }
 
   iframe {
+    background-color: white;
     width: 100%;
     height: 60%;
     height: ~"calc(100% - 220px)";
@@ -177,3 +183,5 @@ ul.attrs-list {
     overflow: hidden;
   }
 }
+
+img { border: 2px solid white; margin: 2px; }

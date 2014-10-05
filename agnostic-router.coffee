@@ -30,6 +30,14 @@ module.exports = (handlers) ->
       # no match
       cb {Error: 'no match.'}
     
+    matchWithData: (path, data, cb) ->
+      for r in routes
+        params = r.pattern.match path
+        if params
+          cb null, r.handler, data
+
+      # no match
+      cb {Error: 'no match.'}
   }
 
 waterfall = (tasks, cb, params) ->
