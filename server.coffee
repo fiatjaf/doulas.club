@@ -1,21 +1,9 @@
 path = require 'path'
-url = require 'url'
 express = require 'express'
 superagent = require 'superagent'
 React = require 'react'
 HTML = require './html.coffee'
 router = require './client.coffee'
-
-renderApp = (req, res, next) ->
-  path = url.parse(req.url).pathname
-
-  router.match path, (err, handler, data) ->
-    return next err if err
-
-    title = data.nome if data.nome
-    app = HTML title: title, body: handler(data)
-    markup = React.renderComponentToString app
-    res.send "<!doctype html>\n" + markup + '<script>_data = ' + JSON.stringify(data) + '</script>'
 
 api = express()
   .get('/doulas', (req, res, next) ->
@@ -41,15 +29,16 @@ api = express()
       res.send r.text
   )
   .get('/doula/:id', (req, res, next) ->
-    superagent.get process.env.COUCH_URL + '/' + req.params.id, (err, r) ->
+    superagent.get(process.env.COUCH_URL + '/' + req.params.id)
+              .end (err, r) ->
       return next() if err
+
       res.set 'content-type', 'application/json'
       res.send r.text
   )
-  
 
 app = express()
 app.use("/assets", express.static(path.join(__dirname, "assets")))
    .use("/api", api)
-   .use(renderApp)
+   .use(router.expressRouter)
    .listen process.env.PORT or 3000, -> console.log 'started!'

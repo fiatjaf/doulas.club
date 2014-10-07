@@ -8,7 +8,7 @@ RRouter = require './react-router'
 updatePage = RRouter.renderOrUpdatePage
 
 router = RRouter [
-  ['/', ResultsPage]
+  ['/', ResultsPage.fetchCoords, ResultsPage.fetchResults, ResultsPage]
   ['/doula/:id', DoulaPage.fetchDoula, DoulaPage]
 ], HTML
 
@@ -16,7 +16,7 @@ module.exports = router
 
 if typeof window isnt "undefined"
   window.onload = ->
-    router.match location.pathname, (err, handler, data) ->
+    router.match location.href, (err, handler, data) ->
       return console.log err if err
       updatePage handler, data
 

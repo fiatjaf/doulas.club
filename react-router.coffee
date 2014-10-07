@@ -14,9 +14,17 @@ RRouter = (routes, htmlComponent) ->
         handler = handlerCache[location.href]
         renderOrUpdatePage handler, JSON.parse(e.state)
       else
-        router.match location.href (err, handler, data) ->
-          return console.log err iferr
+        router.match location.href, (err, handler, data) ->
+          return console.log err if err
           renderOrUpdatePage handler, data
+
+  router.expressRouter = (req, res, next) ->
+    router.match req, req, (err, handler, data) ->
+      return next err if err
+
+      app = HTML data: data, body: handler(data)
+      markup = React.renderComponentToString app
+      res.send "<!doctype html>\n" + markup + '<script>_data = ' + JSON.stringify(data) + '</script>'
 
   return router
 

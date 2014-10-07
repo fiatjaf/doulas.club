@@ -1,5 +1,4 @@
 React = require 'react'
-qs = require 'qs'
 marked = require 'marked'
 
 {html, body, meta, script, link, title,
@@ -16,8 +15,7 @@ localStorage = switch typeof window
 
 ResultsPage = React.createClass
   defaultName: 'ResultsPage'
-  getInitialState: ->
-    rows: []
+  getInitialState: -> @props or {rows: []}
 
   coords:
     ip: null
@@ -26,12 +24,18 @@ ResultsPage = React.createClass
     local: JSON.parse localStorage.getItem 'coords'
 
   componentDidMount: ->
-    @initialFetch()
+    if not @state.rows.length
+      @fetch()
+    else
+      @applyMasonry()
+
+    @updateCoords @fetch
 
   componentDidUpdate: ->
     if not @state.rows.length
-      @initialFetch()
-    @applyMasonry()
+      @fetch()
+    else
+      @applyMasonry()
 
   applyMasonry: ->
     container = @refs.results.getDOMNode()
@@ -46,25 +50,12 @@ ResultsPage = React.createClass
     if @masonry
       setTimeout (=> @masonry.layout()), 401
 
-  initialFetch: ->
-    navigator.geolocation.getCurrentPosition (pos) =>
-      @coords.browser = pos.coords
-      @fetchResults()
-      localStorage.setItem 'coords', JSON.stringify @coords.browser
-
-    superagent.get 'http://freegeoip.net/json/', (err, res) =>
-      if not err
-        @coords.ip = res.body
-        if not @coords.browser
-          @fetchResults()
-          localStorage.setItem 'coords', JSON.stringify @coords.ip
-
   render: ->
     (div
       className: 'search'
     ,
       (form
-        onSubmit: @fetchResults
+        onSubmit: @handleSubmit
       ,
         (span className: 'logo',
           'doulas.club'
@@ -99,42 +90,91 @@ ResultsPage = React.createClass
     )
 
   timeout: null
-  lastInputValue: ''
-  fetchResults: (q, e) ->
-    if q and q.preventDefault
-      q.preventDefault()
-    if e and e.preventDefault
-      e.preventDefault()
-
+  handleSubmit: (e) ->
+    e.preventDefault() if e
     clearTimeout @timeout
-    q = q or @refs.q.getDOMNode().value
-    @lastInputValue = q
-
-    querystring = if typeof window isnt 'undefined' then location.search else ''
-    params = qs.parse querystring
-
-    # add geolocation
-    coords = @coords.manual or @coords.browser or @coords.ip or @coords.local
-    if coords
-      params.near = "#{coords.latitude},#{coords.longitude}"
-
-    # add manual search input
-    if q
-        params.q = q
-
-    superagent.get('/api/doulas')
-              .query(params)
-              .end (err, res) =>
-      return console.log err if err
-      @setState res.body
+    @fetch()
 
   prepareFetch: (e) ->
     e.preventDefault if e
+    clearTimeout @timeout
+    setTimeout @fetch, 2000
 
+  fetch: ->
     q = @refs.q.getDOMNode().value
-    if q != @lastInputValue
-      clearTimeout @timeout
-      setTimeout (=> @fetchResults q), 2000
+    fetchResults window.coords, {q: q}, (err, res) =>
+      @setState res
+      history.replaceState res, null, location.href
+
+  updateCoords: (done) ->
+    if not window.coords or not window.coords.manual and not window.coords.browser
+      navigator.geolocation.getCurrentPosition (pos) =>
+        window.coords = window.coords or {}
+        window.coords.browser = pos.coords
+        done() if done
+
+fetchCoords = (props, querystring, arbitraryData, callback) ->
+  coords =
+    manual: null
+    browser: null
+    ip: null
+
+  if typeof arbitraryData is 'object' and arbitraryData.connection
+    # server, get the coords from the ip
+    req = arbitraryData
+    ip = req.connection.remoteAddress
+    superagent.get 'http://freegeoip.net/json/' + ip, (err, res) =>
+      if not err
+        coords.ip = res.body
+      return callback null, coords, querystring
+
+  else if typeof window isnt 'undefined'
+    # client, try various things, use what finishes first
+    if querystring and querystring.lat and querystring.lng
+      coords.manual =
+        longitude: querystring.lng
+        latitude: querystring.lat
+      callback null, coords, querystring
+
+    if not window.coords.browser
+      navigator.geolocation.getCurrentPosition (pos) =>
+        coords.browser = pos.coords
+        callback null, coords, querystring
+    else
+      callback null, window.coords, querystring
+
+    if not window.coords.ip
+      superagent.get 'http://freegeoip.net/json/', (err, res) =>
+        if not err
+          coords.ip = res.body
+        callback null, coords, querystring
+    else
+      callback null, window.coords.querystring
+
+    # save coords to window
+    window.coords = coords
+
+fetchResults = (coords, querystring, callback) ->
+  # params for querying the database
+  params = {}
+
+  # add geolocation
+  coords = coords.manual or coords.browser or coords.ip or coords.local
+  if coords
+    params.near = "#{coords.latitude},#{coords.longitude}"
+
+  # add manual search input
+  if querystring.q
+    params.q = querystring.q
+
+  # fetch
+  endpoint = if typeof window is 'undefined' then process.env.ENDPOINT else ''
+  superagent.get(endpoint + '/api/doulas')
+            .query(params)
+            .end (err, res) =>
+    return console.log err if err
+
+    callback err, (if res then res.body else null)
 
 DoulaCard = React.createClass
   getInitialState: ->
@@ -189,3 +229,5 @@ DoulaCard = React.createClass
     @props.onMouseLeave()
 
 module.exports = ResultsPage
+module.exports.fetchCoords = fetchCoords
+module.exports.fetchResults = fetchResults

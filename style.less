@@ -47,6 +47,7 @@ html, body {
 
 .results {
   background-color: @pink;
+  min-height: 700px;
   height: auto;
   overflow: auto;
 
@@ -57,6 +58,7 @@ html, body {
     padding: 7px;
     width: 300px;
     max-height: 340px;
+    overflow: hidden;
     color: #333; a { color: @petroleum; }
     &.no-foto {
       h2 { color: #775D4A !important; float: none !important; }
@@ -138,6 +140,8 @@ html, body {
   &.no-iframe {
     background-color: @blue;
     padding-top: 15%;
+
+    a { color: wheat !important; }
   }
 
   .top-bar {

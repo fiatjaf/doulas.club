@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "dependencies": {
-    "qs": "~2.2.4",
+    "qs": "^2.2.4",
     "react": "0.11.1",
     "superagent": "~0.19.0",
     "coffee-script": "^1.8.0",
