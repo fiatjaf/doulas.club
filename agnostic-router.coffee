@@ -40,7 +40,7 @@ module.exports = (handlers) ->
     for r in routes
       params = r.pattern.match pathname
       if params
-        if typeof window isnt 'undefined' and window._data
+        if typeof window isnt 'undefined' and typeof window._data isnt 'undefined'
           # the '_data' variable is the one passed
           # manually by the server.
           cb null, r.handler, window._data

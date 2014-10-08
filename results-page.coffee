@@ -17,25 +17,14 @@ ResultsPage = React.createClass
   defaultName: 'ResultsPage'
   getInitialState: -> @props or {rows: []}
 
-  coords:
-    ip: null
-    browser: null
-    manual: null
-    local: JSON.parse localStorage.getItem 'coords'
-
   componentDidMount: ->
-    if not @state.rows.length
-      @fetch()
-    else
+    if @state.rows and @state.rows.length
       @applyMasonry()
-
-    @updateCoords @fetch
+    else
+      fetchCoords null, null, null, @fetch
 
   componentDidUpdate: ->
-    if not @state.rows.length
-      @fetch()
-    else
-      @applyMasonry()
+    @applyMasonry()
 
   applyMasonry: ->
     container = @refs.results.getDOMNode()
@@ -85,7 +74,7 @@ ResultsPage = React.createClass
             props.key = row.id
             cards.push (DoulaCard props)
           return cards
-        )()
+        )() if @state.rows
       )
     )
 
@@ -104,77 +93,7 @@ ResultsPage = React.createClass
     q = @refs.q.getDOMNode().value
     fetchResults window.coords, {q: q}, (err, res) =>
       @setState res
-      history.replaceState res, null, location.href
-
-  updateCoords: (done) ->
-    if not window.coords or not window.coords.manual and not window.coords.browser
-      navigator.geolocation.getCurrentPosition (pos) =>
-        window.coords = window.coords or {}
-        window.coords.browser = pos.coords
-        done() if done
-
-fetchCoords = (props, querystring, arbitraryData, callback) ->
-  coords =
-    manual: null
-    browser: null
-    ip: null
-
-  if typeof arbitraryData is 'object' and arbitraryData.connection
-    # server, get the coords from the ip
-    req = arbitraryData
-    ip = req.connection.remoteAddress
-    superagent.get 'http://freegeoip.net/json/' + ip, (err, res) =>
-      if not err
-        coords.ip = res.body
-      return callback null, coords, querystring
-
-  else if typeof window isnt 'undefined'
-    # client, try various things, use what finishes first
-    if querystring and querystring.lat and querystring.lng
-      coords.manual =
-        longitude: querystring.lng
-        latitude: querystring.lat
-      callback null, coords, querystring
-
-    if not window.coords.browser
-      navigator.geolocation.getCurrentPosition (pos) =>
-        coords.browser = pos.coords
-        callback null, coords, querystring
-    else
-      callback null, window.coords, querystring
-
-    if not window.coords.ip
-      superagent.get 'http://freegeoip.net/json/', (err, res) =>
-        if not err
-          coords.ip = res.body
-        callback null, coords, querystring
-    else
-      callback null, window.coords.querystring
-
-    # save coords to window
-    window.coords = coords
-
-fetchResults = (coords, querystring, callback) ->
-  # params for querying the database
-  params = {}
-
-  # add geolocation
-  coords = coords.manual or coords.browser or coords.ip or coords.local
-  if coords
-    params.near = "#{coords.latitude},#{coords.longitude}"
-
-  # add manual search input
-  if querystring.q
-    params.q = querystring.q
-
-  # fetch
-  endpoint = if typeof window is 'undefined' then process.env.ENDPOINT else ''
-  superagent.get(endpoint + '/api/doulas')
-            .query(params)
-            .end (err, res) =>
-    return console.log err if err
-
-    callback err, (if res then res.body else null)
+      history.replaceState JSON.stringify(res), null, location.href
 
 DoulaCard = React.createClass
   getInitialState: ->
@@ -227,6 +146,90 @@ DoulaCard = React.createClass
   handleMouseLeave: ->
     clearTimeout @timeout
     @props.onMouseLeave()
+
+fetchCoords = (props, querystring, arbitraryData, callback) ->
+  coords =
+    manual: null
+    browser: null
+    ip: null
+
+  # universal: manually setting the coords wins over the other methods
+  if querystring and querystring.lat and querystring.lng
+    coords.manual =
+      longitude: querystring.lng
+      latitude: querystring.lat
+    callback null, coords, querystring
+
+  if arbitraryData and typeof arbitraryData is 'object' and arbitraryData.connection
+    # server and crawler bot, get the coords from the ip
+    req = arbitraryData
+
+    # check crawler
+    isCrawler = require 'is-crawler'
+    if not isCrawler req.get 'user-agent'
+      # if not crawler, go on without coords
+      return callback null, null, null
+
+    # for a crawler, let's do a proper request parsing and fetch data
+    ip = req.get('x-forwarded-for')
+    if ip
+      ip = ip.split(',')[0].trim()
+    else
+      ip = req.connection.remoteAddress
+
+    superagent.get 'http://freegeoip.net/json/' + ip, (err, res) =>
+      if not err
+        coords.ip = res.body
+      return callback null, coords, querystring
+
+  else if typeof window isnt 'undefined'
+    # client, try various things, use what finishes first
+    if not coords.browser
+      navigator.geolocation.getCurrentPosition (pos) =>
+        coords.browser = pos.coords
+        callback null, coords, querystring
+    else
+      callback null, coords, querystring
+
+    if not coords.ip
+      superagent.get 'http://freegeoip.net/json/', (err, res) =>
+        if not err
+          coords.ip = res.body
+        callback null, coords, querystring if not coords.browser
+    else
+      callback null, coords, querystring
+
+    # save coords to window
+    window.coords = coords
+
+fetchResults = (coords, querystring, callback) ->
+  if not coords and not querystring
+    # this is the case for a normal client use,
+    # let's just return the raw html without
+    # fetching data.
+    return callback null, null
+
+  # params for querying the database
+  params = {}
+
+  # add coords
+  coords = coords.manual or coords.browser or coords.ip or coords.local
+  if coords and coords.latitude and coords.longitude
+    params.near = "#{coords.latitude},#{coords.longitude}"
+
+  # add manual search input
+  if querystring.q
+    params.q = querystring.q
+
+  # fetch
+  endpoint = if typeof window is 'undefined' then process.env.ENDPOINT else ''
+  superagent.get(endpoint + '/api/doulas')
+            .query(params)
+            .end (err, res) =>
+    return console.log err if err
+
+    callback err, (if res then res.body else null)
+
 
 module.exports = ResultsPage
 module.exports.fetchCoords = fetchCoords

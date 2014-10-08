@@ -1,3 +1,6 @@
+all:
+	echo "nothing"
+
 json-docs:
 	python ./scripts/preprocess.py
 

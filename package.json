@@ -19,7 +19,8 @@
     "fibers": "^1.0.2",
     "url-pattern": "^0.6.0",
     "marked": "^0.3.2",
-    "react-frozenhead": "^0.1.0"
+    "react-frozenhead": "^0.1.0",
+    "is-crawler": "0.0.1"
   },
   "devDependencies": {},
   "scripts": {

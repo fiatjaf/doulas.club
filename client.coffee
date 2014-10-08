@@ -9,7 +9,7 @@ updatePage = RRouter.renderOrUpdatePage
 
 router = RRouter [
   ['/', ResultsPage.fetchCoords, ResultsPage.fetchResults, ResultsPage]
-  ['/doula/:id', DoulaPage.fetchDoula, DoulaPage]
+  ['/doula/:id', DoulaPage.fetchDoula, DoulaPage.exposeDocumentTitle, DoulaPage]
 ], HTML
 
 module.exports = router

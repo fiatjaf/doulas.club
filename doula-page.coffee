@@ -49,6 +49,13 @@ DoulaPage = React.createClass
 module.exports = DoulaPage
 
 endpoint = if typeof window is 'undefined' then process.env.ENDPOINT else ''
-module.exports.fetchDoula = (props, callback) ->
+fetchDoula = (props, callback) ->
   superagent.get endpoint + '/api/doula/' + props.id, (err, res) ->
     callback err, (res.body if res)
+
+exposeDocumentTitle = (doulaDoc, callback) ->
+  doulaDoc.documentTitle = doulaDoc.nome if doulaDoc
+  callback err, doulaDoc
+
+module.exports.fetchDoula = fetchDoula
+module.exports.exposeDocumentTitle = exposeDocumentTitle

@@ -30,15 +30,23 @@ RRouter = (routes, htmlComponent) ->
 
 APP = null
 renderOrUpdatePage = (handler, data) ->
-  documentTitle = data.nome if data.nome
+  documentTitle = data.documentTitle if data
   try
     history.replaceState JSON.stringify(data), documentTitle, location.href
     handlerCache[location.href] = handler
   catch e
 
-  APP = HTML title: documentTitle, body: handler(data)
-  APP = React.renderComponent APP, document
-  APP
+  props =
+    title: documentTitle
+    body: handler(data)
+
+  if APP
+    APP.setProps props
+  else
+    APP = HTML title: documentTitle, body: handler(data)
+    APP = React.renderComponent APP, document
+
+  return APP
 
 Link = React.createClass
   render: ->

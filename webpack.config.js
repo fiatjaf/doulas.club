@@ -1,3 +1,5 @@
+var webpack = require('webpack')
+
 module.exports = {
   module: {
     loaders: [
@@ -6,5 +8,8 @@ module.exports = {
   },
   resolve: {
     extensions: ["", ".web.coffee", ".web.js", ".coffee", ".js"]
-  }
+  },
+  plugins: [
+    new webpack.IgnorePlugin(/^is-crawler$/)
+  ]
 }
