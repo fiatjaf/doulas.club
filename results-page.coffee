@@ -165,10 +165,11 @@ fetchCoords = (props, querystring, arbitraryData, callback) ->
     req = arbitraryData
 
     # check crawler
-    isCrawler = require 'is-crawler'
-    if not isCrawler req.get 'user-agent'
-      # if not crawler, go on without coords
-      return callback null, null, null
+    #isCrawler = require 'is-crawler'
+    #if not isCrawler req.get 'user-agent'
+    #  # if not crawler, go on without coords
+    #  return callback null, null, null
+    return callback null, null, null
 
     # for a crawler, let's do a proper request parsing and fetch data
     ip = req.get('x-forwarded-for')
