@@ -36,9 +36,19 @@ api = express()
       res.set 'content-type', 'application/json'
       res.send r.text
   )
+  .get('/sitemap.xml', (req, res, next) ->
+    superagent.get(process.env.COUCH_URL + '/' + '/_design/app/_list/sitemap/all')
+              .end (err, r) ->
+      return next() if err
+      res.set 'content-type', 'text/xml'
+      res.send r.text
+  )
+
+error = (code) -> (req, res) -> res.send(code)
 
 app = express()
-app.use("/assets", express.static(path.join(__dirname, "assets")))
+app.use("/robots.txt", error(404))
+   .use("/assets", express.static(path.join(__dirname, "assets")))
    .use("/api", api)
    .use(router.expressRouter)
    .listen process.env.PORT or 3000, -> console.log 'started!'
