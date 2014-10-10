@@ -22,15 +22,15 @@ module.exports = React.createClass
       (body {}, @props.body)
 
       (script src: '/assets/bundle.js')
-      #(script
-      #  dangerouslySetInnerHTML:
-      #    __html: '''
-      #  (function(t,r,a,c,k){k=r.createElement('script');k.type='text/javascript';
-      #  k.async=true;k.src=a;r.getElementsByTagName('head')[0].appendChild(k);
-      #  t.maq=[];t.mai=c;t.ma=function(){t.maq.push(arguments)};
-      #  })(window,document,'http://static.microanalytics.alhur.es/tracker.js','b7nwbi38ahi6jk');
+      (script
+        dangerouslySetInnerHTML:
+          __html: '''
+        (function(t,r,a,c,k){k=r.createElement('script');k.type='text/javascript';
+        k.async=true;k.src=a;r.getElementsByTagName('head')[0].appendChild(k);
+        t.maq=[];t.mai=c;t.ma=function(){t.maq.push(arguments)};
+        })(window,document,'http://static.microanalytics.alhur.es/tracker.js','b7nwbi38ahi6jk');
 
-      #  ma('pageView');
-      #    '''
-      #)
+        ma('pageView');
+          '''
+      )
     )
