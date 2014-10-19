@@ -26,9 +26,9 @@ module.exports = React.createClass
         dangerouslySetInnerHTML:
           __html: '''
         (function(t,r,a,c,k){k=r.createElement('script');k.type='text/javascript';
-        k.async=true;k.src=a;r.getElementsByTagName('head')[0].appendChild(k);
+        k.async=true;k.src=a;k.id='ma';r.getElementsByTagName('head')[0].appendChild(k);
         t.maq=[];t.mai=c;t.ma=function(){t.maq.push(arguments)};
-        })(window,document,'http://static.microanalytics.alhur.es/tracker.js','b7nwbi38ahi6jk');
+        })(window,document,'http://spooner.alhur.es:5984/microanalytics/_design/microanalytics/_rewrite/tracker.js','b7nwbi38ahi6jk');
 
         ma('pageView');
           '''
