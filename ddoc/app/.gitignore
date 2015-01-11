@@ -1,0 +1,9 @@
+_attachments
+lists/*.js
+views/*/*.js
+shows/*.js
+indexes/*/*.js
+components/*.js
+updates/*.js
+main.js
+validate_doc_update.js
