@@ -135,13 +135,13 @@ factory = (React, marked, superagent) ->
         ) if @props.intro
         (iframe
           src: @props.iframe
-        ) if @state.iframe and @props.iframe
+        ) if @state.preload and @props.iframe
       )
   
     handleMouseEnter: ->
       @props.onMouseEnter()
       setTimeout (=>
-        @timeout = @setState iframe: true
+        @timeout = @setState preload: true
       ), 250
   
     handleMouseLeave: ->
