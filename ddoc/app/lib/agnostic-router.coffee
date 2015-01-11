@@ -1,6 +1,6 @@
-urlPattern = require 'url-pattern'
-url = require 'url'
-qs = require 'qs'
+urlPattern = require 'lib/url-pattern'
+url = require 'lib/url'
+qs = require 'lib/querystring/index'
 
 module.exports = (handlers) ->
   routes = []

@@ -1,5 +1,4 @@
 @blue: #3D6D96;
-@orange: #F2873F;
 @pink: #DD7E7E;
 @petroleum: #60A794;
 
@@ -18,24 +17,6 @@ html, body {
   border-radius: 0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.3);
   margin-bottom: 60px;
-}
-
-.logo {
-  position: absolute;
-  color: @petroleum;
-  top: 10px;
-  left: 10px;
-
-  &.rotate {
-    top: 54px;
-    left: -35px;
-    transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    -webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    line-height: 35px;
-    color: white;
-  }
 }
 
 .search form {
@@ -100,7 +81,6 @@ html, body {
     h2 {
       color: #CFB96D;
       display: block;
-      height: 32px;
       line-height: 32px;
       margin-left: 2%;
       margin-right: 2%;
@@ -135,7 +115,7 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #F2873F;
+  background-color: @pink;
   color: white;
   &.no-iframe {
     background-color: @blue;
@@ -160,7 +140,6 @@ html, body {
 
     img { height: 98%; display: block; margin: auto; }
     h1 {
-      margin: 10px 20px;
       margin-bottom: 20px;
       padding: 0;
       &.replace-foto {

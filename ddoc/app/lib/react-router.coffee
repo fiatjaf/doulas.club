@@ -1,5 +1,5 @@
-React = require 'react'
-ARouter = require './agnostic-router'
+React = require 'lib/react'
+ARouter = require 'lib/agnostic-router'
 
 router = null
 handlerCache = {}
