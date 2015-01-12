@@ -11,4 +11,4 @@ couch-ddoc:
 	rsync -rtvu components/ _attachments/components
 	rsync -rtvu lib/ _attachments/lib
 	lessc style.less _attachments/style.css
-	couchapp push . http://bliengerventookinglearkm:0NPW5hCmfTu1MOT0ys8H8wgs@fiatjaf.cloudant.com/doulas
+	couchapp push . http://heremeddesedenumforestry:lwhjgjsuCIBTYEMLlMSWXrj8@fiatjaf.cloudant.com/doulas
