@@ -53,8 +53,6 @@ factory = (React, marked, superagent) ->
             placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
             name: 'q'
             ref: 'q'
-            onChange: @prepareFetch
-            onBlur: @prepareFetch
           )
           (button
             type: 'submit',
@@ -78,16 +76,9 @@ factory = (React, marked, superagent) ->
         )
       )
   
-    timeout: null
     handleSubmit: (e) ->
       e.preventDefault() if e
-      clearTimeout @timeout
       @fetch()
-  
-    prepareFetch: (e) ->
-      e.preventDefault if e
-      clearTimeout @timeout
-      setTimeout @fetch, 2000
   
     fetch: ->
       q = @refs.q.getDOMNode().value
