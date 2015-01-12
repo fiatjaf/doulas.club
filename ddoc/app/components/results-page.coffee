@@ -21,7 +21,7 @@ factory = (React, marked, superagent) ->
       if @state.rows and @state.rows.length
         @applyMasonry()
       else
-        fetchCoords null, null, @fetch
+        fetchCoords null, => @fetch()
   
     componentDidUpdate: ->
       @applyMasonry()
@@ -78,11 +78,24 @@ factory = (React, marked, superagent) ->
   
     handleSubmit: (e) ->
       e.preventDefault() if e
-      @fetch()
+      @fetch(true)
   
-    fetch: ->
+    fetch: (doFetchCoords=false) ->
       q = @refs.q.getDOMNode().value
-      fetchResults window.coords, {q: q}, (err, res) =>
+
+      if doFetchCoords
+        fetchCoords {q: q}, (flags={}) =>
+          if flags.coordsFromSearch
+            q = ''
+            coords = {manual: flags.coordsFromSearch}
+          else
+            coords = window.coords
+          @actuallyFetch coords, {q: q}
+      else
+        @actuallyFetch window.coords, {q: q}
+
+    actuallyFetch: (coords, search_query) ->
+      fetchResults coords, search_query, (err, res) =>
         console.log err if err
         @setState res
         history.replaceState JSON.stringify(res), null, location.href
@@ -139,18 +152,27 @@ factory = (React, marked, superagent) ->
       clearTimeout @timeout
       @props.onMouseLeave()
   
-  fetchCoords = (props, querystring, callback) ->
-    coords =
+  fetchCoords = (querystring={}, callback) ->
+    coords = window.coords or {
       manual: null
       browser: null
       ip: null
+    }
   
     # manually setting the coords wins over the other methods
-    if querystring and querystring.lat and querystring.lng
+    if querystring.lat and querystring.lng
       coords.manual =
         lng: querystring.lng
         lat: querystring.lat
-      callback null, coords, querystring
+      window.coords = coords
+      return callback()
+
+    # if there is a typed search query, check if it has coordinates
+    if querystring.q
+      superagent.get('http://maps.googleapis.com/maps/api/geocode/json?address="' + querystring.q + '"')
+                .end (err, res) =>
+        if not err
+          callback({coordsFromSearch: res.body.results[0].geometry.location})
   
     # otherwise try using the ip or the browser data
     if not coords.browser
@@ -159,9 +181,9 @@ factory = (React, marked, superagent) ->
           lat: pos.coords.latitude
           lng: pos.coords.longitude
         # use browser data when available
-        callback null, coords, querystring
+        callback() if not coords.manual
     else
-      callback null, coords, querystring
+      callback() if not coords.manual
   
     if not coords.ip
       superagent.get 'http://www.telize.com/geoip', (err, res) =>
@@ -170,9 +192,9 @@ factory = (React, marked, superagent) ->
             lat: res.body.latitude
             lng: res.body.longitude
         # use ip data when available, but only when browser data isn't
-        callback null, coords, querystring if not coords.browser
+        callback() if not coords.manual and not coords.browser
     else
-      callback null, coords, querystring if not coords.browser
+      callback() if not coords.manual and not coords.browser
   
     # save coords to window
     window.coords = coords
