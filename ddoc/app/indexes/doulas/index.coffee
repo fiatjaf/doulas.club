@@ -1,9 +1,13 @@
 (doc) ->
+  boost = (if doc.foto then 2 else 1) + (if doc.iframe then 2 else 1)
+
   index(
     'default'
     doc.nome + ' ' + doc.cidade + ' ' + (doc.intro or '') + ' ' + (doc.formacao or '')
-    {boost: (if doc.foto then 2 else 1) + (if doc.iframe then 2 else 1)}
+    {boost: boost}
   )
+
+  index 'boost', boost
 
   index 'cidade', doc.cidade
   index 'nome', doc.nome

@@ -199,7 +199,7 @@ factory = (React, marked, superagent) ->
     # add coords
     coords = coords.manual or coords.browser or coords.ip or coords.local
     if coords and coords.lat and coords.lng
-      params.sort = "\"<distance,lng,lat,#{coords.lng},#{coords.lat},km>\""
+      params.sort = "[\"<distance,lng,lat,#{coords.lng},#{coords.lat},km>\", \"-boost\"]"
   
     # add manual search input
     params.q = querystring.q or "lng:[-73 TO -34] AND lat:[-32 TO 3]"
