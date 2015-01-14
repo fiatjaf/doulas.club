@@ -22,6 +22,11 @@ factory = (React, marked, superagent) ->
         @applyMasonry()
       else
         fetchCoords null, => @fetch()
+
+      # change the title so the user can find the tab name
+      # easier in his sea of tabs
+      parts = document.title.split(' | ')
+      document.title = parts[1] + ' | ' + parts[0]
   
     componentDidUpdate: ->
       @applyMasonry()
@@ -41,15 +46,26 @@ factory = (React, marked, superagent) ->
   
     render: ->
       (div
+        itemScope: true
+        itemType: 'http://schema.org/WebPage'
         className: 'search'
       ,
         (form
+          itemProp: 'potentialAction'
+          itemScope: true
+          itemType: 'http://schema.org/SearchAction'
           onSubmit: @handleSubmit
         ,
           (span className: 'logo',
             'doulas.club'
           )
+          (meta
+            itemProp: 'target'
+            content: '/search?q={query}'
+          )
           (input
+            itemProp: 'query-input'
+            type: 'text'
             placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
             name: 'q'
             ref: 'q'

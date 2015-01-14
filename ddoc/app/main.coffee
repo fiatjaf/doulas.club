@@ -1,6 +1,15 @@
-module.exports = (componentName, __data) ->
+module.exports = (componentName, doc) ->
   React = require 'lib/react'
   component = React.createFactory(require 'components/' + componentName)
+
+  if doc and doc.nome
+    meta =
+      title: doc.nome + ' | doulas.club'
+      description: if doc.intro then doc.intro.replace(/"/g, "'") else 'Informações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
+  else
+    meta =
+      title: 'gestante, ache sua doula | doulas.club'
+      description: 'A melhor doula para você é uma só, e ela está aqui. O maior diretório de doulas do Brasil. Todas as doulas, todas as regiões.'
 
   """
 <!doctype html>
@@ -10,7 +19,8 @@ module.exports = (componentName, __data) ->
   <link rel="stylesheet" href="//cdn.rawgit.com/picnicss/picnic/master/releases/v1.1.min.css">
   <link rel="stylesheet" href="/_ddoc/style.css">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Cookie|Noto+Sans">
-  <title>doulas.club - gestante, ache sua doula</title>
+  <title>#{meta.title}</title>
+  <meta name="description" content="#{meta.description}">
   <script>
     (function(t,r,a,c,k){k=r.createElement('script');k.type='text/javascript';
     k.async=true;k.src=a;k.id='ma';r.getElementsByTagName('head')[0].appendChild(k);
@@ -22,7 +32,7 @@ module.exports = (componentName, __data) ->
 </head>
 
 <body>
-#{React.renderToString(component(__data))}
+#{React.renderToString(component(doc))}
 </body>
 
 <script src="//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min.js"></script>
@@ -37,7 +47,7 @@ module.exports = (componentName, __data) ->
       'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js'
     }
   })
-  var __data = #{toJSON __data}
+  var __data = #{toJSON doc}
   curl(['lib/react', 'components/#{componentName}'], function (React, component) {
     component = React.createFactory(component)
     React.render(component(window.__data), document.body)
