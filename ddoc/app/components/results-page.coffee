@@ -42,7 +42,7 @@ factory = (React, marked, superagent) ->
   
     updateMasonry: ->
       if @masonry
-        setTimeout (=> @masonry.layout()), 401
+        setTimeout (=> @masonry.layout()), 201
   
     render: ->
       (div
@@ -158,14 +158,15 @@ factory = (React, marked, superagent) ->
         ) if @state.preload and @props.iframe
       )
   
+    fetchIframeTimeout: null
     handleMouseEnter: ->
       @props.onMouseEnter()
-      setTimeout (=>
-        @timeout = @setState preload: true
-      ), 250
+      @fetchIframeTimeout = setTimeout (=>
+        @setState preload: true
+      ), 2000
   
     handleMouseLeave: ->
-      clearTimeout @timeout
+      clearTimeout @fetchIframeTimeout
       @props.onMouseLeave()
   
   fetchCoords = (querystring={}, callback) ->
