@@ -1,12 +1,15 @@
-module.exports = (componentName, doc) ->
+module.exports = (componentName, doc, req) ->
   React = require 'lib/react'
   component = React.createFactory(require 'components/' + componentName)
 
   if doc and doc.nome
+    data = doc
     meta =
       title: doc.nome + ' | doulas.club'
       description: if doc.intro then doc.intro.replace(/"/g, "'") else 'Informações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
   else
+    data = {}
+    data.query = req.query
     meta =
       title: 'gestante, ache sua doula | doulas.club'
       description: 'A melhor doula para você é uma só, e ela está aqui. O maior diretório de doulas do Brasil. Todas as doulas, todas as regiões.'
@@ -32,7 +35,7 @@ module.exports = (componentName, doc) ->
 </head>
 
 <body>
-#{React.renderToString(component(doc))}
+#{React.renderToString(component(data))}
 </body>
 
 <script src="//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min.js"></script>
@@ -47,7 +50,7 @@ module.exports = (componentName, doc) ->
       'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js'
     }
   })
-  var __data = #{toJSON doc}
+  var __data = #{toJSON data}
   curl(['lib/react', 'components/#{componentName}'], function (React, component) {
     component = React.createFactory(component)
     React.render(component(window.__data), document.body)

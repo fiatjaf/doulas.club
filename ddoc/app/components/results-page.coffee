@@ -15,7 +15,7 @@ factory = (React, marked, superagent) ->
   
   ResultsPage = React.createClass
     defaultName: 'ResultsPage'
-    getInitialState: -> @props or {rows: []}
+    getInitialState: -> {rows: @props.rows or []}
   
     componentDidMount: ->
       if @state.rows and @state.rows.length
@@ -72,6 +72,7 @@ factory = (React, marked, superagent) ->
               itemProp: 'query-input'
               type: 'text'
               placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
+              defaultValue: @props.query.q
               name: 'q'
               ref: 'q'
             )
@@ -116,8 +117,8 @@ factory = (React, marked, superagent) ->
       else
         @actuallyFetch window.coords, {q: q}
 
-    actuallyFetch: (coords, search_query) ->
-      fetchResults coords, search_query, (err, res) =>
+    actuallyFetch: (coords, query) ->
+      fetchResults coords, query, (err, res) =>
         console.log err if err
         @setState res
         history.replaceState JSON.stringify(res), null, location.href
@@ -175,7 +176,7 @@ factory = (React, marked, superagent) ->
       clearTimeout @fetchIframeTimeout
       @props.onMouseLeave()
   
-  fetchCoords = (querystring={}, callback) ->
+  fetchCoords = (query={}, callback) ->
     coords = window.coords or {
       manual: null
       browser: null
@@ -183,17 +184,17 @@ factory = (React, marked, superagent) ->
     }
   
     # manually setting the coords wins over the other methods
-    if querystring.lat and querystring.lng
+    if query.lat and query.lng
       coords.manual =
-        lng: querystring.lng
-        lat: querystring.lat
+        lng: query.lng
+        lat: query.lat
       window.coords = coords
       return callback()
 
     # if there is a typed search query, check if it has coordinates
-    if querystring.q and ':' not in querystring.q
+    if query.q and ':' not in query.q
       superagent.get('http://maps.googleapis.com/maps/api/geocode/json')
-                .query({address: '"' + querystring.q + '"'})
+                .query({address: '"' + query.q + '"'})
                 .query({components: 'country:BR'})
                 .query({sensor: true})
                 .end (err, res) =>
@@ -229,8 +230,8 @@ factory = (React, marked, superagent) ->
     # save coords to window
     window.coords = coords
   
-  fetchResults = (coords, querystring, callback) ->
-    if not coords and not querystring
+  fetchResults = (coords, query, callback) ->
+    if not coords and not query
       # this is the case for a normal client use,
       # let's just return the raw html without
       # fetching data.
@@ -248,8 +249,8 @@ factory = (React, marked, superagent) ->
       ]
 
     # add manual search input
-    if querystring.q
-      params.q = querystring.q
+    if query.q
+      params.q = query.q
       params.sort.unshift "relevance"
     else
       params.q = "lng:[-73 TO -34] AND lat:[-32 TO 3]"
