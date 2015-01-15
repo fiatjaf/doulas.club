@@ -5,7 +5,7 @@ factory = (React, marked, superagent) ->
   module.exports = {}
 
   {html, body, meta, script, link, title,
-   div, iframe, ul, li, header, article,
+   nav, div, iframe, ul, li, header, article,
    span, a, h1, h2, h3, h4, img,
    form, input, button} = React.DOM
   
@@ -47,32 +47,38 @@ factory = (React, marked, superagent) ->
     render: ->
       (div
         itemScope: true
-        itemType: 'http://schema.org/WebPage'
-        className: 'search'
+        itemType: 'http://schema.org/SearchResultsPage'
+        className: 'search-page'
       ,
-        (form
-          itemProp: 'potentialAction'
-          itemScope: true
-          itemType: 'http://schema.org/SearchAction'
-          onSubmit: @handleSubmit
-        ,
-          (span className: 'logo',
-            'doulas.club'
+        (nav {},
+          (div className: 'main',
+            (a
+              itemProp: 'name'
+              itemProp: 'url'
+              href: '/'
+            , 'doulas.club')
           )
-          (meta
-            itemProp: 'target'
-            content: '/search?q={query}'
-          )
-          (input
-            itemProp: 'query-input'
-            type: 'text'
-            placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
-            name: 'q'
-            ref: 'q'
-          )
-          (button
-            type: 'submit',
-            'PROCURAR'
+          (form
+            itemProp: 'potentialAction'
+            itemScope: true
+            itemType: 'http://schema.org/SearchAction'
+            onSubmit: @handleSubmit
+          ,
+            (meta
+              itemProp: 'target'
+              content: '/search?q={query}'
+            )
+            (input
+              itemProp: 'query-input'
+              type: 'text'
+              placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
+              name: 'q'
+              ref: 'q'
+            )
+            (button
+              type: 'submit',
+              'PROCURAR'
+            )
           )
         )
         (div

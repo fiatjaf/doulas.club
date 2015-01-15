@@ -19,15 +19,41 @@ html, body {
   margin-bottom: 60px;
 }
 
-.search form {
-  width: 100%;
-  text-align: center;
+.search-page {
+  background-color: @pink;
+}
 
-  input { width: 50%; }
+nav {
+  @media screen and (max-width: 1200px) {
+    position: absolute;
+  }
+
+  .main {
+    width: 20%;
+    float: left;
+
+    @media all and (max-width: 1000px) { display: none; }
+
+    color: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+  }
+
+  form {
+    width: 78%;
+    float: right;
+
+    @media all and (max-width: 950px) { width: 100% }
+
+    text-align: center;
+    input { width: 70%; }
+    button { background-color: @blue; color: white; }
+  }
 }
 
 .results {
   background-color: @pink;
+  margin-top: 43px;
   min-height: 700px;
   height: auto;
   overflow: auto;
@@ -81,10 +107,11 @@ html, body {
     h2 {
       color: #CFB96D;
       display: block;
-      line-height: 32px;
+      line-height: 40px;
       margin-left: 2%;
       margin-right: 2%;
       margin-top: 14px;
+      margin-bottom: 0;
       padding: 0;
       font-size: 2.1em;
       overflow: hidden;
@@ -115,42 +142,74 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: @pink;
   color: white;
+  a { color: wheat; }
   &.no-iframe {
     background-color: @blue;
-    padding-top: 15%;
-
-    a { color: wheat !important; }
+    @media all and (min-width: 750px) {
+      padding-top: 15%;
+    }
   }
 
   .top-bar {
-    position: relative;
-    height: 220px;
+    background-color: @blue;
+    height: auto;
+    overflow: auto;
     border: none;
-    padding: 0;
     margin: 0;
+    padding: 7px 0;
 
     & > div {
-      height: 100%;
-      padding: auto 8px;
-      overflow: hidden;
-      &:hover { overflow: auto; }
+      padding: 0 7px;
     }
 
-    img { height: 98%; display: block; margin: auto; }
+    @media all and (min-width: 1200px) {
+      max-height: 214px;
+
+      & > div {
+        max-height: 207px; /* remember the 7px padding (only the upper padding counts for our purposes of height limitation) */
+        overflow: hidden;
+        &:hover { overflow: auto; }
+      }
+    }
+
+    .avatar { }
+
+    img {
+      height: 200px;
+      display: block;
+      margin: auto;
+    }
+
     h1 {
-      margin-bottom: 20px;
+      font-size: 2.7em;
+      font-family: "Cookie", sans-serif;
+      margin: 0;
       padding: 0;
+
       &.replace-foto {
-        height: 50px;
         width: 98%;
         margin-top: 10%;
         text-align: center;
       }
     }
-    ul.attrs-list {
 
+    .text { }
+    .intro {
+      font-size: 0.9em;
+      line-height: 1.3em;
+    }
+    p:first-child { margin-top: 0 }
+
+    ul.attrs-list {
+      width: 100%;
+    }
+
+    .logo {
+      text-align: center;
+      padding-top: 5em;
+
+      button { background-color: white; color: @pink; }
     }
   }
 

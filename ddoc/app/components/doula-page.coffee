@@ -17,7 +17,7 @@ factory = (React, superagent, marked) ->
         className: 'h-resume h-card doula-page' +
                    if @props.iframe then '' else ' no-iframe',
         (div className: 'top-bar',
-          (div className: 'full l-third',
+          (div className: 'avatar full m-third l-third',
             (img
               itemProp: 'image'
               className: 'u-photo', alt: "foto da doula #{@props.nome}"
@@ -28,15 +28,15 @@ factory = (React, superagent, marked) ->
               className: 'p-name replace-foto'
             , @props.nome) if not @props.foto
           )
-          (div className: 'full l-third',
+          (div className: 'text full m-two-third l-third',
             (h1 {itemProp: 'name'}, @props.nome) if @props.foto
             (div
-              className: 'e-note'
+              className: 'intro e-note'
               dangerouslySetInnerHTML:
                 __html: marked(@props.intro) if @props.intro
             )
           )
-          (div className: 'p-summary full l-third',
+          (div className: 'p-summary full m-third l-sixth',
             (ul {className: 'attrs-list'},
               (li
                 itemProp: 'alumniOf'
@@ -78,10 +78,16 @@ factory = (React, superagent, marked) ->
               (li {}, (a {href: @props.facebook, target: '_blank'}, 'facebook')) if @props.facebook
             )
           )
+          (div className: 'logo full m-third l-sixth',
+            (a className: 'button error', href: '/',
+              'doulas.club')
+          )
         )
         (iframe
           itemProp: 'sameAs'
-          className: 'u-url', src: @props.iframe) if @props.iframe
+          className: 'u-url'
+          src: @props.iframe
+        ) if @props.iframe
       )
   
   module.exports = DoulaPage
@@ -90,12 +96,7 @@ factory = (React, superagent, marked) ->
     superagent.get '/' + props.id, (err, res) ->
       callback err, (res.body if res)
   
-  exposeDocumentTitle = (doulaDoc, callback) ->
-    doulaDoc.documentTitle = doulaDoc.nome if doulaDoc
-    callback null, doulaDoc
-  
   module.exports.fetchDoula = fetchDoula
-  module.exports.exposeDocumentTitle = exposeDocumentTitle
 
   return module.exports
 
