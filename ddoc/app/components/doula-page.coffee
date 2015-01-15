@@ -51,7 +51,7 @@ factory = (React, superagent, marked) ->
               (li className: 'p-experience h-event',
                 (span {className: 'p-name'}, "doula")
                 " desde "
-                (span {className: 'dt-start', datetime: @props.desde}, @props.desde)
+                (span {className: 'dt-start', dateTime: @props.desde}, @props.desde)
               ) if @props.desde
               (li
                 itemProp: 'address'

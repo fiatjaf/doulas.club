@@ -185,11 +185,18 @@ factory = (React, marked, superagent) ->
       return callback()
 
     # if there is a typed search query, check if it has coordinates
-    if querystring.q
-      superagent.get('http://maps.googleapis.com/maps/api/geocode/json?address="' + querystring.q + '"')
+    if querystring.q and ':' not in querystring.q
+      superagent.get('http://maps.googleapis.com/maps/api/geocode/json')
+                .query({address: '"' + querystring.q + '"'})
+                .query({components: 'country:BR'})
+                .query({sensor: true})
                 .end (err, res) =>
-        if not err
-          callback({coordsFromSearch: res.body.results[0].geometry.location})
+        first = res.body.results[0]
+        if not err and
+           first and
+           not first.partial_match and
+           'political' in first.types
+          callback({coordsFromSearch: first.geometry.location})
   
     # otherwise try using the ip or the browser data
     if not coords.browser
@@ -225,16 +232,24 @@ factory = (React, marked, superagent) ->
   
     # params for querying the database
     params = {}
-  
+
     # add coords
     coords = coords.manual or coords.browser or coords.ip or coords.local
     if coords and coords.lat and coords.lng
-      params.sort = "[\"<distance,lng,lat,#{coords.lng},#{coords.lat},km>\", \"-boost\"]"
-  
+      params.sort = [
+        "<distance,lng,lat,#{coords.lng},#{coords.lat},km>",
+        "-boost"
+      ]
+
     # add manual search input
-    params.q = querystring.q or "lng:[-73 TO -34] AND lat:[-32 TO 3]"
-  
+    if querystring.q
+      params.q = querystring.q
+      params.sort.unshift "relevance"
+    else
+      params.q = "lng:[-73 TO -34] AND lat:[-32 TO 3]"
+
     # fetch
+    params.sort = JSON.stringify(params.sort)
     superagent.get('/_ddoc/_search/doulas')
               .set('Accept', 'application/json')
               .query(params)
@@ -244,8 +259,7 @@ factory = (React, marked, superagent) ->
       return console.log err if err
   
       callback err, (if res then res.body else null)
-  
-  
+
   module.exports = ResultsPage
   module.exports.fetchCoords = fetchCoords
   module.exports.fetchResults = fetchResults
