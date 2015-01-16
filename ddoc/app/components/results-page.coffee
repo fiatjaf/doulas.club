@@ -15,18 +15,25 @@ factory = (React, marked, superagent) ->
   
   ResultsPage = React.createClass
     defaultName: 'ResultsPage'
-    getInitialState: -> {rows: @props.rows or []}
+    mixins: [React.addons.LinkedStateMixin]
+    getInitialState: ->
+      q: @props.query.q or ''
+      rows: @props.rows or []
   
     componentDidMount: ->
       if @state.rows and @state.rows.length
         @applyMasonry()
       else
-        fetchCoords null, => @fetch()
+        @fetch(true)
 
       # change the title so the user can find the tab name
       # easier in his sea of tabs
       parts = document.title.split(' | ')
       document.title = parts[1] + ' | ' + parts[0]
+
+      window.addEventListener 'popstate', (e) =>
+        if e.state and e.state.pushed
+          @setState q: e.state.q, => @fetch(true)
   
     componentDidUpdate: ->
       @applyMasonry()
@@ -72,9 +79,8 @@ factory = (React, marked, superagent) ->
               itemProp: 'query-input'
               type: 'text'
               placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
-              defaultValue: @props.query.q
+              valueLink: @linkState 'q'
               name: 'q'
-              ref: 'q'
             )
             (button
               type: 'submit',
@@ -101,10 +107,14 @@ factory = (React, marked, superagent) ->
   
     handleSubmit: (e) ->
       e.preventDefault() if e
+
+      if history
+        history.pushState {pushed: true, q: @state.q}, null, '/search?q=' + @state.q
+
       @fetch(true)
   
     fetch: (doFetchCoords=false) ->
-      q = @refs.q.getDOMNode().value
+      q = @state.q
 
       if doFetchCoords
         fetchCoords {q: q}, (flags={}) =>
@@ -121,7 +131,6 @@ factory = (React, marked, superagent) ->
       fetchResults coords, query, (err, res) =>
         console.log err if err
         @setState res
-        history.replaceState JSON.stringify(res), null, location.href
   
   DoulaCard = React.createFactory React.createClass
     getInitialState: ->
