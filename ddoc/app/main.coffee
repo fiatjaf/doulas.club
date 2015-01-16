@@ -47,7 +47,7 @@ module.exports = (componentName, doc, req) ->
     paths: {
       'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons.js',
       'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min.js',
-      'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js'
+      'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js',
     }
   })
   var __data = #{toJSON data}

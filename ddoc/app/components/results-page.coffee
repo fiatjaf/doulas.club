@@ -101,7 +101,28 @@ factory = (React, marked, superagent) ->
               props.key = row.id
               cards.push (DoulaCard props)
             return cards
-          )() if @state.rows
+          )() if @state.rows.length
+        )
+        (div className: 'bottom-utils',
+          (button
+            className: 'load-more'
+            onClick: @actuallyFetch.bind @, @state.bookmark
+          , '+') if not @state.fetching and
+                    @state.total_rows > @state.rows.length
+          (div
+            className: 'loading'
+            dangerouslySetInnerHTML:
+              __html: '''<!--?xml version="1.0" encoding="utf-8"?-->
+<svg width="88px" height="88px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="uil-wave">
+  <rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect>
+  <path fill="white" d="M90,50c0,5.5-5.7,8.8-7.8,13.6s-0.3,11-4,14.7s-9.9,1.9-14.7,4S55.5,90,50,90 s-8.8-5.7-13.6-7.8s-11-0.3-14.7-4s-1.9-9.9-4-14.7S10,55.5,10,50s5.7-8.8,7.8-13.6s0.3-11,4-14.7s9.1-1.6,13.9-3.6S44.5,10,50,10 s9.8,6.2,14.6,8.2s10.1-0.1,13.7,3.5s2.2,10.6,4.3,15.4S90,44.5,90,50z">
+    <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="45 50 50" repeatCount="indefinite" dur="1"></animateTransform>
+  </path>
+  <path fill="#3d6d96" d="M80,50c0,4.1-4.3,6.6-5.8,10.2c-1.5,3.6-0.3,8.3-3,11c-2.7,2.7-7.4,1.5-11,3C56.6,75.7,54.1,80,50,80 s-6.6-4.3-10.2-5.8c-3.6-1.5-8.3-0.3-11-3c-2.7-2.7-1.5-7.4-3-11C24.3,56.6,20,54.1,20,50s4.3-6.6,5.8-10.2c1.5-3.6,0.3-8.3,3-11 s6.9-1.2,10.4-2.7C42.8,24.5,45.9,20,50,20s7.3,4.6,10.9,6.1c3.6,1.5,7.6-0.1,10.3,2.7c2.7,2.7,1.7,8,3.2,11.6S80,45.9,80,50z">
+    <animateTransform attributeName="transform" type="rotate" from="45 50 50" to="0 50 50" repeatCount="indefinite" dur="1"></animateTransform>
+  </path>
+</svg>'''
+          ) if @state.fetching
         )
       )
   
@@ -114,23 +135,35 @@ factory = (React, marked, superagent) ->
       @fetch(true)
   
     fetch: (doFetchCoords=false) ->
+      # reset search states that were saved in window
+      window.q = ''
+      window.coords.manual = null if window.coords
+      # these states cannot exist between different search queries
+
       q = @state.q
+      window.q = q
 
       if doFetchCoords
         fetchCoords {q: q}, (flags={}) =>
           if flags.coordsFromSearch
             q = ''
-            coords = {manual: flags.coordsFromSearch}
-          else
-            coords = window.coords
-          @actuallyFetch coords, {q: q}
+            window.coords.manual = flags.coordsFromSearch
+            window.q = q
+          @actuallyFetch()
       else
-        @actuallyFetch window.coords, {q: q}
+        @actuallyFetch()
 
-    actuallyFetch: (coords, query) ->
-      fetchResults coords, query, (err, res) =>
+    actuallyFetch: (bookmark) ->
+      @setState fetching: true
+      fetchResults window.coords, {q: window.q}, {bookmark: bookmark}, (err, res) =>
         console.log err if err
-        @setState res
+        @state.fetching = false
+        if not bookmark
+          @setState res
+        else
+          @state.rows = @state.rows.concat res.rows
+          @state.bookmark = res.bookmark
+          @setState @state
   
   DoulaCard = React.createFactory React.createClass
     getInitialState: ->
@@ -239,15 +272,12 @@ factory = (React, marked, superagent) ->
     # save coords to window
     window.coords = coords
   
-  fetchResults = (coords, query, callback) ->
+  fetchResults = (coords={}, query={}, params={}, callback) ->
     if not coords and not query
       # this is the case for a normal client use,
       # let's just return the raw html without
       # fetching data.
       return callback null, null
-  
-    # params for querying the database
-    params = {}
 
     # add coords
     coords = coords.manual or coords.browser or coords.ip or coords.local
