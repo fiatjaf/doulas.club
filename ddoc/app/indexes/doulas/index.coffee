@@ -19,11 +19,15 @@
   if doc.desde
     index 'desde', doc.desde
 
-  if doc.outras_formacoes
-    if typeof doc.outras_formacoes == 'object'
-      formacoes = doc.outras_formacoes.join ' '
-    else
-      formacoes = doc.outras_formacoes
+  if typeof doc.email == 'string'
+    index 'email', doc.email
+  else if typeof doc.email == 'object'
+    index 'email', doc.email.join ' '
+
+  if typeof doc.outras_formacoes == 'string'
+    formacoes = doc.outras_formacoes.join ' '
+  else if typeof doc.outras_formacoes == 'object'
+    formacoes = doc.outras_formacoes
 
     index 'formacoes', formacoes
 

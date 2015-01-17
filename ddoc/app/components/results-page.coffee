@@ -138,6 +138,7 @@ factory = (React, marked, superagent) ->
       # reset search states that were saved in window
       window.q = ''
       window.coords.manual = null if window.coords
+      @state.keep = false
       # these states cannot exist between different search queries
 
       q = @state.q
@@ -149,17 +150,23 @@ factory = (React, marked, superagent) ->
             q = ''
             window.coords.manual = flags.coordsFromSearch
             window.q = q
-          @actuallyFetch()
+          @actuallyFetch(null, true)
       else
-        @actuallyFetch()
+        @actuallyFetch(null, false)
 
-    actuallyFetch: (bookmark) ->
+    actuallyFetch: (bookmark, force=false) ->
       @setState fetching: true
       fetchResults window.coords, {q: window.q}, {bookmark: bookmark}, (err, res) =>
         console.log err if err
         @state.fetching = false
         if not bookmark
-          @setState res
+          # this prevents delayed bad results (for example, when
+          # a query done before google-geolocation finishes after
+          # the one did after, which should have better results)
+          if not @state.keep or force
+            @setState res
+            if force
+              @state.keep = true
         else
           @state.rows = @state.rows.concat res.rows
           @state.bookmark = res.bookmark
@@ -235,7 +242,7 @@ factory = (React, marked, superagent) ->
 
     # if there is a typed search query, check if it has coordinates
     if query.q and ':' not in query.q
-      superagent.get('http://maps.googleapis.com/maps/api/geocode/json')
+      superagent.get('https://maps.googleapis.com/maps/api/geocode/json')
                 .query({address: '"' + query.q + '"'})
                 .query({components: 'country:BR'})
                 .query({sensor: true})
@@ -259,7 +266,7 @@ factory = (React, marked, superagent) ->
       callback() if not coords.manual
   
     if not coords.ip
-      superagent.get 'http://www.telize.com/geoip', (err, res) =>
+      superagent.get 'https://www.telize.com/geoip', (err, res) =>
         if not err
           coords.ip =
             lat: res.body.latitude
