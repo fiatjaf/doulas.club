@@ -211,7 +211,7 @@ factory = (React, marked, superagent) ->
         ) if @props.intro
         (iframe
           src: @props.iframe
-        ) if @state.preload and @props.iframe
+        ) if @state.preload and @props.iframe and not window.mobile
       )
   
     fetchIframeTimeout: null

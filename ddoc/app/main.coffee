@@ -55,5 +55,6 @@ module.exports = (componentName, doc, req) ->
     component = React.createFactory(component)
     React.render(component(window.__data), document.body)
   })
+  window.mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 </script>
   """
