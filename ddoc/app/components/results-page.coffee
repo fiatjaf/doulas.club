@@ -131,6 +131,8 @@ factory = (React, marked, superagent) ->
 
       if history
         history.pushState {pushed: true, q: @state.q}, null, '/search?q=' + @state.q
+      if typeof ma == 'function'
+        ma 'search', @state.q
 
       @fetch(true)
   
@@ -247,11 +249,9 @@ factory = (React, marked, superagent) ->
                 .query({components: 'country:BR'})
                 .query({sensor: true})
                 .end (err, res) =>
+        return if err
         first = res.body.results[0]
-        if not err and
-           first and
-           not first.partial_match and
-           'political' in first.types
+        if first and not first.partial_match and 'political' in first.types
           callback({coordsFromSearch: first.geometry.location})
   
     # otherwise try using the ip or the browser data
