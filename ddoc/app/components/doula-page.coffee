@@ -8,6 +8,12 @@ factory = (React, superagent, marked) ->
    div, iframe, ul, li,
    span, a, h1, h2, h3, h4, img,
    form, input, button} = React.DOM
+
+  marked.setOptions
+    gfm: true
+    smartLists: true
+    breaks: true
+    sanitize: true
   
   DoulaPage = React.createClass
     render: ->

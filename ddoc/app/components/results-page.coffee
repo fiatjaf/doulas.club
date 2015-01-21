@@ -8,6 +8,12 @@ factory = (React, marked, superagent) ->
    nav, div, iframe, ul, li, header, article,
    span, a, h1, h2, h3, h4, img,
    form, input, button} = React.DOM
+
+  marked.setOptions
+    gfm: true
+    smartLists: true
+    breaks: true
+    sanitize: true
   
   localStorage = switch typeof window
     when 'undefined' then {getItem: (-> 'null'), setItem: (->)}
