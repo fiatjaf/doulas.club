@@ -12,7 +12,7 @@ module.exports = (componentName, doc, req) ->
     data.query = req.query
     meta =
       title: 'gestante, ache sua doula | doulas.club'
-      description: 'A melhor doula para você é uma só, e ela está aqui. O maior diretório de doulas do Brasil. Todas as doulas, todas as regiões.'
+      description: 'Todas as doulas, todas as regiões.'
 
   """
 <!doctype html>
