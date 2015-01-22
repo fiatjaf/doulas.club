@@ -39,20 +39,24 @@ module.exports = (componentName, doc, req) ->
 #{React.renderToString(component(data))}
 </body>
 
-<script src="//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min.js"></script>
-<script src="//cdn.jsdelivr.net/masonry/3.1.5/masonry.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/curl/0.7.3/curl/curl.min.js"></script>
 <script>
   curl.config({
-    baseUrl: '/_ddoc',
+    baseUrl: '/_ddoc/bower_components',
     paths: {
+      'lib': '/_ddoc/lib',
+      'components': '/_ddoc/components',
       'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons.js',
       'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min.js',
       'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js',
+      'masonry': 'masonry/masonry.js',
+      'imagesloaded': 'imagesloaded/imagesloaded.js',
     }
   })
   var __data = #{toJSON data}
-  curl(['lib/react', 'components/#{componentName}'], function (React, component) {
+  curl([
+    'lib/react', 'components/#{componentName}',
+  ], function (React, component) {
     component = React.createFactory(component)
     React.render(component(window.__data), document.body)
   })

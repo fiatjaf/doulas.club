@@ -45,13 +45,14 @@ factory = (React, marked, superagent) ->
       @applyMasonry()
   
     applyMasonry: ->
-      container = @refs.results.getDOMNode()
-      imagesLoaded container, =>
-        @masonry = new Masonry container, {
-          columnWidth: 320
-          itemSelector: '.doula-card'
-        }
-        @masonry.bindResize()
+      curl ['imagesloaded', 'masonry'], (imagesLoaded, Masonry) =>
+        container = @refs.results.getDOMNode()
+        imagesLoaded container, =>
+          @masonry = new Masonry container, {
+            columnWidth: 320
+            itemSelector: '.doula-card'
+          }
+          @masonry.bindResize()
   
     updateMasonry: ->
       if @masonry
