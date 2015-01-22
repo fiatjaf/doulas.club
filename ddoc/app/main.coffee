@@ -39,22 +39,22 @@ module.exports = (componentName, doc, req) ->
 #{React.renderToString(component(data))}
 </body>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/curl/0.7.3/curl/curl.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script>
-  curl.config({
+  requirejs.config({
     baseUrl: '/_ddoc/bower_components',
     paths: {
       'lib': '/_ddoc/lib',
       'components': '/_ddoc/components',
-      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons.js',
-      'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min.js',
-      'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js',
-      'masonry': 'masonry/masonry.js',
-      'imagesloaded': 'imagesloaded/imagesloaded.js',
+      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons',
+      'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min',
+      'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min',
+      'masonry': 'masonry/masonry',
+      'imagesloaded': 'imagesloaded/imagesloaded',
     }
   })
   var __data = #{toJSON data}
-  curl([
+  requirejs([
     'lib/react', 'components/#{componentName}',
   ], function (React, component) {
     component = React.createFactory(component)

@@ -45,7 +45,7 @@ factory = (React, marked, superagent) ->
       @applyMasonry()
   
     applyMasonry: ->
-      curl ['imagesloaded', 'masonry'], (imagesLoaded, Masonry) =>
+      requirejs ['imagesloaded', 'masonry'], (imagesLoaded, Masonry) =>
         container = @refs.results.getDOMNode()
         imagesLoaded container, =>
           @masonry = new Masonry container, {
