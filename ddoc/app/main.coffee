@@ -42,15 +42,15 @@ module.exports = (componentName, doc, req) ->
 <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script>
   requirejs.config({
-    baseUrl: '/_ddoc/bower_components',
+    baseUrl: '/_ddoc',
     paths: {
       'lib': '/_ddoc/lib',
       'components': '/_ddoc/components',
       'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons',
       'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min',
       'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min',
-      'masonry': 'masonry/masonry',
-      'imagesloaded': 'imagesloaded/imagesloaded',
+      'masonry': '//cdn.jsdelivr.net/masonry/3.1.5/masonry.min',
+      'imagesloaded': '//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min',
     }
   })
   var __data = #{toJSON data}
