@@ -82,16 +82,20 @@ factory = (React, marked, superagent) ->
               itemProp: 'target'
               content: '/search?q={query}'
             )
-            (input
-              itemProp: 'query-input'
-              type: 'text'
-              placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
-              valueLink: @linkState 'q'
-              name: 'q'
+            (div className: 'input',
+              (input
+                itemProp: 'query-input'
+                type: 'text'
+                placeholder: 'Procure por nomes, cidades, conhecimentos da doula...'
+                valueLink: @linkState 'q'
+                name: 'q'
+              )
             )
-            (button
-              type: 'submit',
-              'PROCURAR'
+            (div className: 'button',
+              (button
+                type: 'submit',
+                'PROCURAR'
+              )
             )
           )
         )

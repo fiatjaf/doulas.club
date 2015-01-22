@@ -43,11 +43,17 @@ nav {
     width: 78%;
     float: right;
 
-    @media all and (max-width: 950px) { width: 100% }
+    div.input { width: 70%; float: left; }
+    div.button { width: 30%; float: left; line-height: 42px; }
+    input { width: 99%; }
+    button { width: 87%; background-color: @blue; color: white; }
+
+    @media all and (max-width: 1000px) {
+      width: 100%;
+      button { font-size: 80%; padding-left: 2px; padding-right: 2px; }
+    }
 
     text-align: center;
-    input { width: 70%; }
-    button { background-color: @blue; color: white; }
   }
 }
 
@@ -76,11 +82,8 @@ nav {
     }
     &:hover, &.no-foto:hover {
       max-height: 480px;
-      .intro { max-height: 178px; overflow: auto; word-break: break-all; } 
+      .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
     }
-    transition: max-height 0.8s;
-    -webkit-transition: max-height 0.8s;
-    -moz-transition: max-height 0.8s;
 
     header {
       overflow: hidden;

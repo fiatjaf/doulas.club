@@ -22,7 +22,6 @@ module.exports = (componentName, doc, req) ->
   <meta name=viewport content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="//cdn.rawgit.com/picnicss/picnic/master/releases/v1.1.min.css">
   <link rel="stylesheet" href="/_ddoc/style.css">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Cookie|Noto+Sans">
   <title>#{meta.title}</title>
   <meta name="description" content="#{meta.description}">
   <script>
@@ -46,7 +45,7 @@ module.exports = (componentName, doc, req) ->
     paths: {
       'lib': '/_ddoc/lib',
       'components': '/_ddoc/components',
-      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons',
+      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons.min',
       'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min',
       'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min',
       'masonry': '//cdn.jsdelivr.net/masonry/3.1.5/masonry.min',
@@ -55,11 +54,25 @@ module.exports = (componentName, doc, req) ->
   })
   var __data = #{toJSON data}
   requirejs([
-    'lib/react', 'components/#{componentName}',
+    'lib/react', 'components/#{componentName}.min',
   ], function (React, component) {
     component = React.createFactory(component)
     React.render(component(window.__data), document.body)
   })
   window.mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+</script>
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Cookie::latin', 'Noto-Sans::latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
 </script>
   """
