@@ -1,6 +1,6 @@
-deps = ['lib/react', 'lib/marked', 'lib/superagent']
+deps = ['lib/react', 'lib/marked', 'lib/superagent', 'lib/pouchdb-collate']
 
-factory = (React, marked, superagent) ->
+factory = (React, marked, superagent, pouchCollate) ->
   module = {}
   module.exports = {}
 
@@ -56,7 +56,7 @@ factory = (React, marked, superagent) ->
   
     updateMasonry: ->
       if @masonry
-        setTimeout (=> @masonry.layout()), 201
+        @masonryTimeout = setTimeout (=> @masonry.layout()), 201
   
     render: ->
       (div
@@ -151,11 +151,14 @@ factory = (React, marked, superagent) ->
       # reset search states that were saved in window
       window.q = ''
       window.coords.manual = null if window.coords
-      @state.keep = false
       # these states cannot exist between different search queries
 
       q = @state.q
       window.q = q
+
+      # this is necessary so we know when we should replace the state
+      # with the new results and when we should just append
+      searchId = Math.random()
 
       if doFetchCoords
         fetchCoords {q: q}, (flags={}) =>
@@ -163,23 +166,53 @@ factory = (React, marked, superagent) ->
             q = ''
             window.coords.manual = flags.coordsFromSearch
             window.q = q
-          @actuallyFetch(null, true)
+          @actuallyFetch(null, limit: 30, googleCoords: !!flags.coordsFromSearch, searchId: searchId)
       else
-        @actuallyFetch(null, false)
+        @actuallyFetch(null, limit: 15, searchId: searchId)
 
-    actuallyFetch: (bookmark, force=false) ->
+    actuallyFetch: (bookmark, kwargs={}) ->
       @setState fetching: true
-      fetchResults window.coords, {q: window.q}, {bookmark: bookmark}, (err, res) =>
+
+      fetchResults window.coords, {q: window.q, limit: kwargs.limit}, {bookmark: bookmark}, (err, res) =>
         console.log err if err
         @state.fetching = false
         if not bookmark
-          # this prevents delayed bad results (for example, when
-          # a query done before google-geolocation finishes after
-          # the one did after, which should have better results)
-          if not @state.keep or force
-            @setState res
-            if force
-              @state.keep = true
+
+          if @state.rows and @state.searchId == kwargs.searchId
+            # second (or third) result from a batch of searches
+            rows = []
+            rowIndex = {}
+            for row in @state.rows.concat res.rows
+              if row.order.length == 4 # has '-<score>' in the beggining
+                score = row.order[0]
+                row.finalScore = [62.5 + (score * -12.5), -row.order[2]]
+              else if row.order.length == 3 # begins with '<distance>'
+                distance = row.order[0]
+                row.finalScore = [distance, -row.order[1]]
+
+              # filter out duplicates
+              if row.id of rowIndex
+                if rowIndex[row.id].finalScore < row.finalScore
+                  continue
+                else
+                  remove = rows.indexOf rowIndex[row.id]
+                  rows.splice remove, 1
+                  rowIndex[row.id] = row
+              rowIndex[row.id] = row
+
+              rows.push row
+
+            rows.sort (a, b) -> pouchCollate.collate(a.finalScore, b.finalScore)
+            @state.rows = rows
+
+          else # first result from a (new) batch of searches
+            q = @state.q
+            @state = res
+            @state.q = q
+            @state.searchId = kwargs.searchId
+
+          @setState @state
+
         else
           @state.rows = @state.rows.concat res.rows
           @state.bookmark = res.bookmark
@@ -237,6 +270,10 @@ factory = (React, marked, superagent) ->
     handleMouseLeave: ->
       clearTimeout @fetchIframeTimeout
       @props.onMouseLeave()
+
+    componentWillUnmount: ->
+      clearTimeout @fetchIframeTimeout
+      clearTimeout @masonryTimeout
   
   fetchCoords = (query={}, callback) ->
     coords = window.coords or {
@@ -308,7 +345,7 @@ factory = (React, marked, superagent) ->
     # add manual search input
     if query.q
       params.q = query.q
-      params.sort.unshift "relevance"
+      params.sort.unshift '-<score>'
     else
       params.q = "lng:[-73 TO -34] AND lat:[-32 TO 3]"
 
@@ -318,7 +355,7 @@ factory = (React, marked, superagent) ->
               .set('Accept', 'application/json')
               .query(params)
               .query('include_docs': 'true')
-              .query('limit': '30')
+              .query('limit': query.limit or 30)
               .end (err, res) =>
       return console.log err if err
   

@@ -46,7 +46,7 @@ module.exports = (componentName, doc, req) ->
     paths: {
       'lib': '/_ddoc/lib',
       'components': '/_ddoc/components',
-      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons.min',
+      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons',
       'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min',
       'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min',
       'masonry': '//cdn.jsdelivr.net/masonry/3.1.5/masonry.min',
@@ -55,7 +55,7 @@ module.exports = (componentName, doc, req) ->
   })
   var __data = #{toJSON data}
   requirejs([
-    'lib/react', 'components/#{componentName}.min',
+    'lib/react', 'components/#{componentName}',
   ], function (React, component) {
     component = React.createFactory(component)
     React.render(component(window.__data), document.body)
