@@ -39,20 +39,37 @@ module.exports = (componentName, doc, req) ->
 #{React.renderToString(component(data))}
 </body>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script>
-  requirejs.config({
+  require = {
     baseUrl: '/_ddoc',
     paths: {
       'lib': '/_ddoc/lib',
       'components': '/_ddoc/components',
-      'lib/react': '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons',
-      'lib/superagent': '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min',
-      'lib/marked': '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min',
-      'masonry': '//cdn.jsdelivr.net/masonry/3.1.5/masonry.min',
-      'imagesloaded': '//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min',
+      'lib/react': [
+        '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react-with-addons',
+        'lib/react'
+       ],
+      'lib/superagent': [
+        '//cdn.jsdelivr.net/superagent/0.18.0/superagent.min',
+        'lib/superagent'
+       ],
+      'lib/marked': [
+        '//cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min',
+        'lib/marked'
+       ],
+      'masonry': [
+        '//cdn.jsdelivr.net/masonry/3.1.5/masonry.min',
+        'lib/masonry'
+       ],
+      'imagesloaded': [
+        '//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min',
+        'lib/imagesloaded'
+       ],
     }
-  })
+  }
+  </script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
+  <script>
   var __data = #{toJSON data}
   requirejs([
     'lib/react', 'components/#{componentName}',

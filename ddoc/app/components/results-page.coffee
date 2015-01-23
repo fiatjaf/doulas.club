@@ -27,6 +27,8 @@ factory = (React, marked, superagent, pouchCollate) ->
       rows: @props.rows or []
   
     componentDidMount: ->
+      requirejs ['imagesloaded', 'masonry']
+
       if @state.rows and @state.rows.length
         @applyMasonry()
       else
@@ -162,11 +164,25 @@ factory = (React, marked, superagent, pouchCollate) ->
 
       if doFetchCoords
         fetchCoords {q: q}, (flags={}) =>
+
+          # ignore written query if geolocation found a result
+          # means the written query is not important, just the coordinates
+          # like when someone types 'são paulo'
           if flags.coordsFromSearch
             q = ''
             window.coords.manual = flags.coordsFromSearch
             window.q = q
-          @actuallyFetch(null, limit: 30, googleCoords: !!flags.coordsFromSearch, searchId: searchId)
+
+          # change the searchId when this flag is present
+          # mainly for the case when, after searching with coords
+          # from IP only, the user authorizes the browser coords
+          # then we do the search again, but discard the old
+          # results, instead of mixing them
+          # (when the searchId is the same we mix the results)
+          if flags.newSearch
+            searchId = Math.random()
+
+          @actuallyFetch(null, limit: 30, searchId: searchId)
       else
         @actuallyFetch(null, limit: 15, searchId: searchId)
 
@@ -300,7 +316,7 @@ factory = (React, marked, superagent, pouchCollate) ->
         return if err
         first = res.body.results[0]
         if first and not first.partial_match and 'political' in first.types
-          callback({coordsFromSearch: first.geometry.location})
+          callback(coordsFromSearch: first.geometry.location)
   
     # otherwise try using the ip or the browser data
     if not coords.browser
@@ -309,12 +325,13 @@ factory = (React, marked, superagent, pouchCollate) ->
           lat: pos.coords.latitude
           lng: pos.coords.longitude
         # use browser data when available
-        callback() if not coords.manual
+        callback(newSearch: true) if not coords.manual
     else
       callback() if not coords.manual
   
     if not coords.ip
-      superagent.get 'https://www.telize.com/geoip', (err, res) =>
+      superagent.get('https://www.telize.com/geoip')
+                .end (err, res) =>
         if not err
           coords.ip =
             lat: res.body.latitude
