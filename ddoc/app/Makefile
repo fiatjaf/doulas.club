@@ -10,6 +10,6 @@ couch-ddoc:
 	coffee -c --bare .
 	rsync -rtvu components/ _attachments/components
 	rsync -rtvu lib/ _attachments/lib
-	minify _attachments/components/
+	#minify _attachments/components/
 	lessc --clean-css style.less _attachments/style.css
 	couchapp push . http://heremeddesedenumforestry:lwhjgjsuCIBTYEMLlMSWXrj8@fiatjaf.cloudant.com/doulas

@@ -36,8 +36,8 @@ factory = (React, marked, superagent, pouchCollate) ->
 
       # change the title so the user can find the tab name
       # easier in his sea of tabs
-      parts = document.title.split(' | ')
-      document.title = parts[1] + ' | ' + parts[0]
+      if not @props.query.q
+        document.title = @props.baseTitle
 
       window.addEventListener 'popstate', (e) =>
         if e.state and e.state.pushed
@@ -72,7 +72,7 @@ factory = (React, marked, superagent, pouchCollate) ->
               itemProp: 'name'
               itemProp: 'url'
               href: '/'
-            , 'doulas.club')
+            , @props.baseTitle)
           )
           (form
             itemProp: 'potentialAction'
@@ -141,6 +141,11 @@ factory = (React, marked, superagent, pouchCollate) ->
   
     handleSubmit: (e) ->
       e.preventDefault() if e
+
+      if @state.q
+        document.title = @state.q + ' | pesquisa ' + @props.baseTitle
+      else
+        document.title = @props.baseTitle
 
       if history
         history.pushState {pushed: true, q: @state.q}, null, '/search?q=' + @state.q

@@ -2,17 +2,24 @@ module.exports = (componentName, doc, req) ->
   React = require 'lib/react'
   component = React.createFactory(require 'components/' + componentName)
 
+  baseTitle = 'doulas.club'
+
   if doc and doc.nome
     data = doc
     meta =
-      title: doc.nome + ' | doulas.club'
+      title: doc.nome + ' | ' + baseTitle
       description: if doc.intro then doc.intro.replace(/"/g, "'") else 'Informações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
   else
     data = {}
     data.query = req.query
     meta =
-      title: 'gestante, ache sua doula | doulas.club'
+      title: if req.query and req.query.q then \
+               req.query.q + ' | pesquisa ' + baseTitle \
+             else \
+               baseTitle + ' - mais de 750 doulas no Brasil'
       description: 'Todas as doulas, todas as regiões.'
+
+  data.baseTitle = baseTitle
 
   """
 <!doctype html>
