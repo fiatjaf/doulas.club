@@ -142,9 +142,7 @@ factory = (React, marked, superagent, pouchCollate) ->
     handleSubmit: (e) ->
       e.preventDefault() if e
 
-      if @state.q
-        document.title = @state.q + ' | pesquisa ' + @props.baseTitle
-      else
+      if not @state.q
         document.title = @props.baseTitle
 
       if history
