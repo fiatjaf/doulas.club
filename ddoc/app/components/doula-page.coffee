@@ -16,6 +16,8 @@ factory = (React, superagent, marked) ->
     sanitize: true
   
   DoulaPage = React.createClass
+    getInitialState: -> {}
+
     render: ->
       (div
         itemScope: true
@@ -85,8 +87,11 @@ factory = (React, superagent, marked) ->
             )
           )
           (div className: 'logo full m-third l-sixth',
-            (a className: 'button error', href: '/',
-              'doulas.club')
+            (form {method: 'GET', action: if @state.q then '/search' else '/'},
+              (input type: 'text', name: 'q', placeholder: 'Procurar doulas por região, nome, características, peculiaridades, formação, personalidade', onChange: @changedQuery)
+              (button type: 'form', className: 'button error', href: '/',
+                if @state.q then 'Pesquisar' else 'doulas.club')
+            )
           )
         )
         (iframe
@@ -95,6 +100,8 @@ factory = (React, superagent, marked) ->
           src: @props.iframe
         ) if @props.iframe
       )
+
+    changedQuery: (e) -> @setState q: e.target.value
   
   module.exports = DoulaPage
   

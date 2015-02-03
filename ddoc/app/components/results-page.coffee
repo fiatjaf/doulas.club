@@ -262,7 +262,7 @@ factory = (React, marked, superagent, pouchCollate) ->
             (li {key: tel}, tel) for tel in [].concat @props.tel if @props.tel
             (li {key: email}, email) for email in [].concat @props.email if @props.email
             (li {key: site}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site
-            (li {}, (a {href: @props.facebook, target: '_blank'}, @props.facebook.split('/').slice(-1)[0])) if @props.facebook
+            (li {}, (a {href: @props.facebook, target: '_blank'}, 'facebook')) if @props.facebook
           )
         )
         (a

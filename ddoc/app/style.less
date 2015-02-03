@@ -32,7 +32,7 @@ nav {
     width: 20%;
     float: left;
 
-    @media all and (max-width: 1000px) { display: none; }
+    @media all and (max-width: 1024px) { display: none; }
 
     color: inherit;
     font-weight: inherit;
@@ -48,7 +48,7 @@ nav {
     input { width: 99%; }
     button { width: 87%; background-color: @blue; color: white; }
 
-    @media all and (max-width: 1000px) {
+    @media all and (max-width: 1024px) {
       width: 100%;
       button { font-size: 80%; padding-left: 2px; padding-right: 2px; }
     }
@@ -74,16 +74,6 @@ nav {
     max-height: 340px;
     overflow: hidden;
     color: #333; a { color: @petroleum; }
-    &.no-foto {
-      h2 { color: #775D4A !important; float: none !important; }
-      ul { width: 96%; }
-      header { max-height: 140px; }
-      .intro { max-height: 119px; }
-    }
-    &:hover, &.no-foto:hover {
-      max-height: 480px;
-      .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
-    }
 
     header {
       overflow: hidden;
@@ -97,7 +87,6 @@ nav {
         margin-left: 2%;
       }
       ul.attrs-list {
-        
         li:hover {
           overflow: visible;
           word-wrap: break-word;
@@ -129,10 +118,37 @@ nav {
       margin: 2px 2%;
       font-size: 0.8em;
       overflow: hidden;
+
+      ul {
+        padding: 0px;
+        list-style-position: inside;
+
+        li {
+          list-style-position: inside;
+          margin: 0;
+        }
+      }
+        
     }
 
     iframe {
       display: none;
+    }
+
+    &.no-foto {
+      h2 { color: #775D4A !important; float: none !important; }
+      ul { width: 96%; }
+      header { max-height: 140px; }
+      .intro { max-height: 119px; }
+    }
+
+    &:hover, &.no-foto:hover {
+      max-height: 480px;
+      .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
+    }
+    @media all and (max-width: 1024px) {
+      max-height: 480px;
+      .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
     }
   }
 }
@@ -162,7 +178,7 @@ nav {
   a { color: wheat; }
   &.no-iframe {
     background-color: @blue;
-    @media all and (min-width: 750px) {
+    @media all and (min-width: 768px) {
       padding-top: 15%;
     }
   }
@@ -183,7 +199,7 @@ nav {
       max-height: 214px;
 
       & > div {
-        max-height: 207px; /* remember the 7px padding (only the upper padding counts for our purposes of height limitation) */
+        max-height: 200px;
         overflow: hidden;
         &:hover { overflow: auto; }
       }
@@ -223,8 +239,13 @@ nav {
 
     .logo {
       text-align: center;
-      padding-top: 5em;
+      padding-top: 3.5em;
 
+      input {
+        font-size: 58%;
+        width: 95%;
+        height: 3em;
+      }
       button { background-color: white; color: @pink; }
     }
   }
