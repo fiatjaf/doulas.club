@@ -1,6 +1,7 @@
 *.swp
 *.swo
 node_modules
+docs/_attachments/*
 *.pyc
 *.pyo
 *.css

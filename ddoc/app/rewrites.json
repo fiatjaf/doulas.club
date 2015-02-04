@@ -2,8 +2,8 @@
   {"from": "", "to": "_show/index"},
   {"from": "sitemap.xml", "to": "_list/sitemap/all"},
   {"from": "favicon.ico", "to": "gravida-silhueta.png"},
-  {"from": ":id", "to": "_show/index/:id"},
   {"from": "doula/:id", "to": "_show/index/:id"},
   {"from": "_ddoc/*", "to": "*"},
-  {"from": "*", "to": "/*"}
+  {"from": ":id", "to": "_show/index/:id"},
+  {"from": ":id/:attach", "to": "../../:id/:attach"}
 ]

@@ -242,21 +242,28 @@ factory = (React, marked, superagent, pouchCollate) ->
       iframe: false
   
     render: ->
+      foto = null
+      if @props._attachments
+        for key, data of @props._attachments
+          if data.content_type.split('/')[0] == 'image' and
+             data.length > 100
+            foto = "/#{@props._id}/#{key}"
+
       (div
         className: 'doula-card' +
-                   if not @props.foto then ' no-foto' else ''
+                   if not foto then ' no-foto' else ''
         onMouseEnter: @handleMouseEnter
         onMouseLeave: @handleMouseLeave
       ,
         (a
           href: '/' + @props._id
           data: @props
-        , (h2 {}, @props.nome)) if not @props.foto
+        , (h2 {}, @props.nome)) if not foto
         (header {},
           (a
             href: '/' + @props._id
             data: @props
-          , (img src: @props.foto)) if @props.foto
+          , (img src: foto)) if foto
           (ul className: 'attrs-list',
             (li {}, @props.cidade)
             (li {key: tel}, tel) for tel in [].concat @props.tel if @props.tel
@@ -268,7 +275,7 @@ factory = (React, marked, superagent, pouchCollate) ->
         (a
           href: '/' + @props._id
           data: @props
-        , (h2 {}, @props.nome)) if @props.foto
+        , (h2 {}, @props.nome)) if foto
         (div
           className: 'intro'
           dangerouslySetInnerHTML:

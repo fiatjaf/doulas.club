@@ -19,6 +19,13 @@ factory = (React, superagent, marked) ->
     getInitialState: -> {}
 
     render: ->
+      foto = null
+      if @props._attachments
+        for key, data of @props._attachments
+          if data.content_type.split('/')[0] == 'image' and
+             data.length > 100
+            foto = "/#{@props._id}/#{key}"
+
       (div
         itemScope: true
         itemType: 'http://schema.org/Person'
@@ -29,15 +36,15 @@ factory = (React, superagent, marked) ->
             (img
               itemProp: 'image'
               className: 'u-photo', alt: "foto da doula #{@props.nome}"
-              src: @props.foto
-            ) if @props.foto
+              src: foto
+            ) if foto
             (h1
               itemProp: 'name'
               className: 'p-name replace-foto'
-            , @props.nome) if not @props.foto
+            , @props.nome) if not foto
           )
           (div className: 'text full m-two-third l-third',
-            (h1 {itemProp: 'name'}, @props.nome) if @props.foto
+            (h1 {itemProp: 'name'}, @props.nome) if foto
             (div
               className: 'intro e-note'
               dangerouslySetInnerHTML:
