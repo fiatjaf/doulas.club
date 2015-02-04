@@ -8,7 +8,7 @@ module.exports = (componentName, doc, req) ->
     data = doc
     meta =
       title: doc.nome + ' | ' + baseTitle
-      description: if doc.intro then doc.intro.replace(/"/g, "'") else 'Informações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
+      description: doc.cidade + ". " + if doc.tel or doc.email then [].concat(doc.tel).concat(doc.email).join(', ') + (if doc.intro then ' - ' + doc.intro else '') else if doc.intro then doc.intro.replace(/"/g, "'") else 'Informações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
   else
     data = {}
     data.query = req.query
