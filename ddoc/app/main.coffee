@@ -16,7 +16,7 @@ module.exports = (componentName, doc, req) ->
       title: if req.query and req.query.q then \
                req.query.q + ' | pesquisa ' + baseTitle \
              else \
-               baseTitle + ' - mais de 750 doulas no Brasil'
+               baseTitle + ' - mais de 800 doulas em todas as regiões do Brasil'
       description: 'Todas as doulas, todas as regiões.'
 
   data.baseTitle = baseTitle
