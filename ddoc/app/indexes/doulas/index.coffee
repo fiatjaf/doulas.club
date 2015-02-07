@@ -1,5 +1,12 @@
 (doc) ->
-  boost = (if doc.foto then 2 else 1) + (if doc.iframe then 2 else 1)
+  boost =
+    (if doc.foto then 2 else 1) +
+    (if doc.iframe then 1.9 else 1) +
+    (if doc.site then 1.5 else 1) +
+    (if doc.tel then 1.4 else 1) +
+    (if doc.email then 1.4 else 1) +
+    (if doc.intro then 2 else 1) +
+    (25 - 'abcdefghijklmnopqrstuvwxyz'.indexOf(doc.nome[0].toLowerCase()))/100
 
   index(
     'default'
