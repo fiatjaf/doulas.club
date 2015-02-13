@@ -42,6 +42,16 @@ factory = (React, marked, superagent, pouchCollate) ->
       window.addEventListener 'popstate', (e) =>
         if e.state and e.state.pushed
           @setState q: e.state.q, => @fetch(true)
+
+      # watch persona events
+      navigator.id.watch
+        onlogin: (assertion) ->
+          superagent.post('http://editar.doulas.club/_auth/login')
+                    .send(assertion: assertion)
+                    .end (err, res) ->
+            if err
+              return console.log err
+            location.href = 'http://editar.doulas.club/'
   
     componentDidUpdate: ->
       @applyMasonry()
@@ -137,7 +147,17 @@ factory = (React, marked, superagent, pouchCollate) ->
 </svg>'''
           ) if @state.fetching
         )
+        (div className: 'footer',
+          (script src: 'https://login.persona.org/include.js')
+          (button
+            onClick: @personaClick
+          )
+        )
       )
+
+    personaClick: (e) ->
+      e.preventDefault()
+      navigator.id.request siteName: 'doulas.club'
   
     handleSubmit: (e) ->
       e.preventDefault() if e
