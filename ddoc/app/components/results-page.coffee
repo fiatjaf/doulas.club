@@ -42,6 +42,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
         onlogin: (assertion) ->
           superagent.post('http://editar.doulas.club/_auth/login')
                     .send(assertion: assertion)
+                    .withCredentials()
                     .end (err, res) ->
             if err
               return console.log err
@@ -114,7 +115,6 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
             for row in @state.rows
               props = row.doc
               props.onMouseEnter = @updateMasonry
-              props.onMouseLeave = @updateMasonry
               props.key = row.id
               cards.push (DoulaCard props)
             return cards

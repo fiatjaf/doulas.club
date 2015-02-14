@@ -64,92 +64,93 @@ nav {
   min-height: 700px;
   height: auto;
   overflow: auto;
+}
 
-  .doula-card {
-    .paper;
-    float: left;
-    margin: 10px;
-    padding: 7px;
-    width: 300px;
-    max-height: 340px;
+.doula-card {
+  .paper;
+  float: left;
+  margin: 10px;
+  padding: 7px;
+  width: 300px;
+  max-height: 340px;
+  overflow: hidden;
+  color: #333; a { color: @petroleum; }
+
+  header {
     overflow: hidden;
-    color: #333; a { color: @petroleum; }
+    max-height: 150px;
 
-    header {
-      overflow: hidden;
-      max-height: 150px;
-
-      img {
-        float: left;
-        width: 40%;
-        display: block;
-        margin-top: 2%;
-        margin-left: 2%;
-      }
-      ul.attrs-list {
-        li:hover {
-          overflow: visible;
-          word-wrap: break-word;
-          white-space: pre;
-          color: @blue;
-          display: block;
-          a { display: block; color: @blue; }
-        }
-      }
-    }
-    h2 {
-      color: #CFB96D;
+    img {
+      float: left;
+      width: 40%;
       display: block;
-      line-height: 40px;
+      margin-top: 2%;
       margin-left: 2%;
-      margin-right: 2%;
-      margin-top: 14px;
-      margin-bottom: 0;
-      padding: 0;
-      font-size: 2.1em;
-      overflow: hidden;
-      font-family: 'Cookie', sans-serif;
-      float: left;
     }
-    .intro {
-      float: left;
-      line-height: 1.5em;
-      max-height: 128px;
-      margin: 2px 2%;
-      font-size: 0.8em;
-      overflow: hidden;
-
-      ul {
-        padding: 0px;
-        list-style-position: inside;
-
-        li {
-          list-style-position: inside;
-          margin: 0;
-        }
+    ul.attrs-list {
+      li:hover {
+        overflow: visible;
+        word-wrap: break-word;
+        white-space: pre;
+        color: @blue;
+        display: block;
+        a { display: block; color: @blue; }
       }
-        
     }
+  }
+  h2 {
+    color: #CFB96D;
+    display: block;
+    line-height: 40px;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 14px;
+    margin-bottom: 0;
+    padding: 0;
+    font-size: 2.1em;
+    overflow: hidden;
+    font-family: 'Cookie', sans-serif;
+    float: left;
+  }
+  .intro {
+    float: left;
+    line-height: 1.5em;
+    max-height: 128px;
+    width: 100%;
+    margin: 2px 2%;
+    font-size: 0.8em;
+    overflow: hidden;
 
-    iframe {
-      display: none;
-    }
+    ul {
+      padding: 0px;
+      list-style-position: inside;
 
-    &.no-foto {
-      h2 { color: #775D4A !important; float: none !important; }
-      ul { width: 96%; }
-      header { max-height: 140px; }
-      .intro { max-height: 119px; }
+      li {
+        list-style-position: inside;
+        margin: 0;
+      }
     }
+      
+  }
 
-    &:hover, &.no-foto:hover {
-      max-height: 480px;
-      .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
-    }
-    @media all and (max-width: 1024px) {
-      max-height: 480px;
-      .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
-    }
+  iframe {
+    display: none;
+  }
+
+  &.no-foto {
+    h2 { color: #775D4A !important; float: none !important; }
+    ul { width: 96%; }
+    header { max-height: 140px; }
+    .intro { max-height: 119px; }
+  }
+
+  &:hover, &.no-foto:hover {
+    max-height: 480px;
+    .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
+  }
+  @media all and (max-width: 1024px) {
+    max-height: 480px;
+    .intro { max-height: 273px; overflow: auto; word-break: break-all; } 
   }
 }
 

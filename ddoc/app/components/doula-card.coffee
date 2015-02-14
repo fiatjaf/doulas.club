@@ -69,14 +69,14 @@ factory = (React, marked) ->
   
     fetchIframeTimeout: null
     handleMouseEnter: ->
-      @props.onMouseEnter()
+      @props.onMouseEnter() if @props.onMouseEnter
       @fetchIframeTimeout = setTimeout (=>
         @setState preload: true
       ), 2000
   
     handleMouseLeave: ->
       clearTimeout @fetchIframeTimeout
-      @props.onMouseLeave()
+      @props.onMouseLeave() if @props.mouseLeave
 
   module.exports = DoulaCard
 
