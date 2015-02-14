@@ -1,6 +1,6 @@
-deps = ['lib/react', 'lib/marked', 'lib/superagent', 'lib/pouchdb-collate']
+deps = ['lib/react', 'lib/superagent', 'lib/pouchdb-collate', 'components/doula-card']
 
-factory = (React, marked, superagent, pouchCollate) ->
+factory = (React, superagent, pouchCollate, DoulaCard) ->
   module = {}
   module.exports = {}
 
@@ -9,12 +9,6 @@ factory = (React, marked, superagent, pouchCollate) ->
    span, a, h1, h2, h3, h4, img,
    form, input, button} = React.DOM
 
-  marked.setOptions
-    gfm: true
-    smartLists: true
-    breaks: true
-    sanitize: true
-  
   localStorage = switch typeof window
     when 'undefined' then {getItem: (-> 'null'), setItem: (->)}
     else window.localStorage or {getItem: (-> 'null'), setItem: (->)}
@@ -256,70 +250,10 @@ factory = (React, marked, superagent, pouchCollate) ->
           @state.rows = @state.rows.concat res.rows
           @state.bookmark = res.bookmark
           @setState @state
-  
-  DoulaCard = React.createFactory React.createClass
-    getInitialState: ->
-      iframe: false
-  
-    render: ->
-      foto = null
-      if @props._attachments
-        for key, data of @props._attachments
-          if data.content_type.split('/')[0] == 'image' and
-             data.length > 100
-            foto = "/#{@props._id}/#{key}"
-
-      (div
-        className: 'doula-card' +
-                   if not foto then ' no-foto' else ''
-        onMouseEnter: @handleMouseEnter
-        onMouseLeave: @handleMouseLeave
-      ,
-        (a
-          href: '/' + @props._id
-          data: @props
-        , (h2 {}, @props.nome)) if not foto
-        (header {},
-          (a
-            href: '/' + @props._id
-            data: @props
-          , (img src: foto)) if foto
-          (ul className: 'attrs-list',
-            (li {}, @props.cidade)
-            (li {key: tel}, tel) for tel in [].concat @props.tel if @props.tel
-            (li {key: email}, email) for email in [].concat @props.email if @props.email
-            (li {key: site}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site
-            (li {}, (a {href: @props.facebook, target: '_blank'}, 'facebook')) if @props.facebook
-          )
-        )
-        (a
-          href: '/' + @props._id
-          data: @props
-        , (h2 {}, @props.nome)) if foto
-        (div
-          className: 'intro'
-          dangerouslySetInnerHTML:
-            __html: marked @props.intro
-        ) if @props.intro
-        (iframe
-          src: @props.iframe
-        ) if @state.preload and @props.iframe and not window.mobile
-      )
-  
-    fetchIframeTimeout: null
-    handleMouseEnter: ->
-      @props.onMouseEnter()
-      @fetchIframeTimeout = setTimeout (=>
-        @setState preload: true
-      ), 2000
-  
-    handleMouseLeave: ->
-      clearTimeout @fetchIframeTimeout
-      @props.onMouseLeave()
 
     componentWillUnmount: ->
-      clearTimeout @fetchIframeTimeout
       clearTimeout @masonryTimeout
+  
   
   fetchCoords = (query={}, callback) ->
     coords = window.coords or {
