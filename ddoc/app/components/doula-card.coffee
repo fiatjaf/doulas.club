@@ -21,11 +21,13 @@ factory = (React, marked) ->
   
     render: ->
       foto = null
-      if @props._attachments
+      if @props.useExternalFoto
+        foto = @props.foto
+      if not foto and @props._attachments
         for key, data of @props._attachments
           if data.content_type.split('/')[0] == 'image' and
              data.length > 100
-            foto = "/#{@props._id}/#{key}"
+            foto = "#{@props.baseURL or ''}/#{@props._id}/#{key}"
 
       (div
         className: 'doula-card' +
@@ -39,7 +41,7 @@ factory = (React, marked) ->
         , (h2 {}, @props.nome)) if not foto
         (header {},
           (a
-            href: '/' + @props._id
+            href: "#{@props.baseURL or ''}/#{@props._id}"
             data: @props
           , (img src: foto)) if foto
           (ul className: 'attrs-list',
@@ -51,7 +53,7 @@ factory = (React, marked) ->
           )
         )
         (a
-          href: '/' + @props._id
+          href: "#{@props.baseURL or ''}/#{@props._id}"
           data: @props
         , (h2 {}, @props.nome)) if foto
         (div

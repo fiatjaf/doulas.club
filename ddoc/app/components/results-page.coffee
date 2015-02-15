@@ -165,7 +165,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
         ma 'search', @state.q
 
       @fetch(true)
-  
+
     fetch: (doFetchCoords=false) ->
       # reset search states that were saved in window
       window.q = ''
