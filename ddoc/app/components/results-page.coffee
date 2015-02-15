@@ -7,7 +7,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
   {html, body, meta, script, link, title,
    nav, div, iframe, ul, li, header, article,
    span, a, h1, h2, h3, h4, img,
-   form, input, button} = React.DOM
+   form, input, textarea, button} = React.DOM
 
   localStorage = switch typeof window
     when 'undefined' then {getItem: (-> 'null'), setItem: (->)}
@@ -141,10 +141,29 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
 </svg>'''
           ) if @state.fetching
         )
-        (div className: 'footer',
+        (div className: 'footer row',
           (script src: 'https://login.persona.org/include.js')
-          (button
-            onClick: @personaClick
+          (div className: 'sixth',
+            (button
+              className: 'persona'
+              onClick: @personaClick
+            , 'Entrar e modificar seu perfil')
+          )
+          (div className: 'sixth form-label',
+            'Contato: '
+          )
+          (form className: 'two-third', action: 'http://formspree.io/pamkkddm', method: 'post',
+            (textarea
+              name: 'message'
+              placeholder: 'indicações, correções, elogios e reclamações'
+            )
+            (input
+              name: 'email'
+              placeholder: 'seu email'
+            )
+            (button
+              type: 'submit'
+            , 'Enviar')
           )
         )
       )
