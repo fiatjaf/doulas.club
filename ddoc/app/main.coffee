@@ -29,6 +29,7 @@ module.exports = (componentName, doc, req) ->
   <meta name=viewport content="width=device-width, initial-scale=1">
   <link rel="search" type="application/opensearchdescription+xml" href="/_ddoc/opensearch.xml" title="doulas.club">
   <link rel="stylesheet" href="//cdn.rawgit.com/picnicss/picnic/master/releases/v1.1.min.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cookie|Noto+Sans">
   <link rel="stylesheet" href="/_ddoc/style.css">
   <title>#{meta.title}</title>
   <meta name="description" content="#{meta.description}">
@@ -75,6 +76,7 @@ module.exports = (componentName, doc, req) ->
     }
   }
   </script>
+  <script src="https://login.persona.org/include.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
   <script>
   var __data = #{toJSON data}
@@ -85,19 +87,5 @@ module.exports = (componentName, doc, req) ->
     React.render(component(window.__data), document.body)
   })
   window.mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-</script>
-<script type="text/javascript">
-  WebFontConfig = {
-    google: { families: [ 'Cookie::latin', 'Noto-Sans::latin' ] }
-  };
-  (function() {
-    var wf = document.createElement('script');
-    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    wf.type = 'text/javascript';
-    wf.async = 'true';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(wf, s);
-  })();
 </script>
   """

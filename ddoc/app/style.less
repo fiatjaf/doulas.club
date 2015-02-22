@@ -109,7 +109,7 @@ nav {
     padding: 0;
     font-size: 2.1em;
     overflow: hidden;
-    font-family: 'Cookie', sans-serif;
+    font-family: Cookie, sans-serif;
     float: left;
   }
   .intro {
@@ -216,7 +216,7 @@ nav {
 
     h1 {
       font-size: 2.7em;
-      font-family: "Cookie", sans-serif;
+      font-family: "Cookie", sans-serif !important;
       margin: 0;
       padding: 0;
 
@@ -225,6 +225,26 @@ nav {
         margin-top: 10%;
         text-align: center;
       }
+    }
+    h1 span { font-family: inherit; }
+
+    .prompt-doula {
+      font-size: 20px;
+      transition: 300ms;
+      -moz-transition: 300ms;
+      -webkit-transition: 300ms;
+      -o-transition: 300ms;
+      color: transparent;
+      text-decoration: underline;
+      font-family: 'Noto Sans', Ubuntu;
+    }
+    .avatar .prompt-doula {
+      display: block;
+      text-align: center;
+    }
+    .text h1:hover .prompt-doula,
+    .avatar:hover .prompt-doula {
+      color: wheat;
     }
 
     .text { }

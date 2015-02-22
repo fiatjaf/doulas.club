@@ -18,6 +18,18 @@ factory = (React, superagent, marked) ->
   DoulaPage = React.createClass
     getInitialState: -> {}
 
+    componentDidMount: ->
+      # watch persona events
+      navigator.id.watch
+        onlogin: (assertion) ->
+          superagent.post('http://editar.doulas.club/_auth/login')
+                    .send(assertion: assertion)
+                    .withCredentials()
+                    .end (err, res) ->
+            if err
+              return console.log err
+            location.href = 'http://editar.doulas.club/'
+
     render: ->
       foto = null
       if @props._attachments
@@ -38,13 +50,31 @@ factory = (React, superagent, marked) ->
               className: 'u-photo', alt: "foto da doula #{@props.nome}"
               src: foto
             ) if foto
-            (h1
-              itemProp: 'name'
-              className: 'p-name replace-foto'
-            , @props.nome) if not foto
+            [
+              (h1
+                itemProp: 'name'
+                key: 'n'
+                className: 'p-name replace-foto'
+              , @props.nome)
+              (div {key: 'p'},
+                (a
+                  href: '#'
+                  className: 'prompt-doula'
+                  onClick: @personaClick
+                , 'é você?')
+              )
+            ] if not foto
           )
           (div className: 'text full m-two-third l-third',
-            (h1 {itemProp: 'name'}, @props.nome) if foto
+            (h1 {},
+              (span {itemProp: 'name'}, @props.nome)
+              ' ',
+              (a
+                href: '#'
+                className: 'prompt-doula'
+                onClick: @personaClick
+              , 'é você?')
+            ) if foto
             (div
               className: 'intro e-note'
               dangerouslySetInnerHTML:
@@ -109,6 +139,10 @@ factory = (React, superagent, marked) ->
       )
 
     changedQuery: (e) -> @setState q: e.target.value
+
+    personaClick: (e) ->
+      e.preventDefault()
+      navigator.id.request siteName: 'doulas.club'
   
   module.exports = DoulaPage
   

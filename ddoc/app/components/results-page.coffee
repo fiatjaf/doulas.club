@@ -142,7 +142,6 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
           ) if @state.fetching
         )
         (div className: 'footer row',
-          (script src: 'https://login.persona.org/include.js')
           (div className: 'sixth',
             (button
               className: 'persona'
