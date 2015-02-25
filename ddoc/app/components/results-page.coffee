@@ -87,7 +87,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
           ,
             (meta
               itemProp: 'target'
-              content: '/search?q={query}'
+              content: '/search?q={q}'
             )
             (div className: 'input',
               (input
