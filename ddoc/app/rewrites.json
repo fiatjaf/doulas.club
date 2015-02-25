@@ -2,7 +2,7 @@
   {"from": "", "to": "_show/index"},
   {"from": "sitemap.xml", "to": "_list/sitemap/all"},
   {"from": "favicon.ico", "to": "gravida-silhueta.png"},
-  {"from": "doula/:id", "to": "_show/index/:id"},
+  {"from": "doulas/em/:place", "to": "_show/index/", "query": {"place": ":place"}},
   {"from": "_ddoc/*", "to": "*"},
   {"from": ":id", "to": "_show/index/:id"},
   {"from": ":id/:attach", "to": "../../:id/:attach"}

@@ -3,6 +3,8 @@ module.exports = (componentName, doc, req) ->
   component = React.createFactory(require 'components/' + componentName)
 
   baseTitle = 'doulas.club'
+  if req.query.place
+    req.query.q = req.query.place
 
   if doc and doc.nome
     data = doc
@@ -22,20 +24,24 @@ module.exports = (componentName, doc, req) ->
   else
     data = {}
     data.query = req.query
+    searchqueryTitle = null
+    prefixdescription = ''
+    if req.query and req.query.q
+      if req.query.place
+        searchqueryTitle = 'Doulas em ' + req.query.q + ' e região | ' + baseTitle
+        prefixdescription = 'A mais completa coletânea de doulas na região de ' + req.query.q + '. '
+      else
+        searchqueryTitle = req.query.q + ' | pesquisa ' + baseTitle
+    description = 'A doula perfeita para você e para o seu bebê está aqui!'
+
     meta =
-      title: if req.query and req.query.q then \
-               req.query.q + ' | pesquisa ' + baseTitle \
-             else \
-               baseTitle + ' - mais de 800 doulas em todas as regiões do Brasil'
-      description: 'Todas as doulas, todas as regiões. A doula perfeita para você, seu parto e o seu filho está aqui.'
+      title: searchqueryTitle or baseTitle + ' - mais de 800 doulas em todas as regiões do Brasil'
+      description: (prefixdescription or 'A mais completa coleção de perfis, informações e contatos das doulas brasileiras. ') + description
       og:
         url: 'http://doulas.club/'
-        title: if req.query and req.query.q then \
-                 req.query.q + ' | pesquisa ' + baseTitle \
-               else \
-                 'Encontre a sua doula ideal no doulas.club!'
+        title: searchqueryTitle or 'Encontre a sua doula ideal no doulas.club!'
         site_name: 'doulas.club'
-        description: 'Mais de 800 doulas de todas as regiões do Brasil. A doula perfeita para você e seu parto está aqui.'
+        description: (prefixdescription or 'São mais de 800 doulas em todas as regiões do Brasil. ') + description
         image: 'http://doulas.club/favicon.ico'
         type: 'website'
 
