@@ -31,13 +31,6 @@ factory = (React, superagent, marked) ->
             location.href = 'http://editar.doulas.club/'
 
     render: ->
-      foto = null
-      if @props._attachments
-        for key, data of @props._attachments
-          if data.content_type.split('/')[0] == 'image' and
-             data.length > 100
-            foto = "/#{@props._id}/#{key}"
-
       (div
         itemScope: true
         itemType: 'http://schema.org/Person'
@@ -48,8 +41,8 @@ factory = (React, superagent, marked) ->
             (img
               itemProp: 'image'
               className: 'u-photo', alt: "foto da doula #{@props.nome}"
-              src: foto
-            ) if foto
+              src: @props._foto
+            ) if @props._foto
             [
               (h1
                 itemProp: 'name'
@@ -63,7 +56,7 @@ factory = (React, superagent, marked) ->
                   onClick: @personaClick
                 , 'é você?')
               )
-            ] if not foto
+            ] if not @props._foto
           )
           (div className: 'text full m-two-third l-third',
             (h1 {},
@@ -74,7 +67,7 @@ factory = (React, superagent, marked) ->
                 className: 'prompt-doula'
                 onClick: @personaClick
               , 'é você?')
-            ) if foto
+            ) if @props._foto
             (div
               className: 'intro e-note'
               dangerouslySetInnerHTML:

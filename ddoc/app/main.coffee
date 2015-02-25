@@ -6,9 +6,19 @@ module.exports = (componentName, doc, req) ->
 
   if doc and doc.nome
     data = doc
+    description = doc.cidade + ". \n" + if doc.tel or doc.email then [].concat(doc.tel).concat(doc.email).join(', ') + (if doc.intro then '\n - ' + doc.intro else '') else if doc.intro then doc.intro.replace(/"/g, "'") else '\nInformações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
+    data._foto = if Object.keys(doc._attachments).length then "http://doulas.club/#{doc._id}/#{Object.keys(doc._attachments)[0]}" else null
     meta =
       title: doc.nome + ' | ' + baseTitle
-      description: doc.cidade + ". " + if doc.tel or doc.email then [].concat(doc.tel).concat(doc.email).join(', ') + (if doc.intro then ' - ' + doc.intro else '') else if doc.intro then doc.intro.replace(/"/g, "'") else 'Informações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
+      description: description
+      og:
+        url: 'http://doulas.club/' + doc._id
+        title: 'Perfil da doula ' + doc.nome
+        site_name: 'doulas.club'
+        description: description
+        image: data._foto
+        type: 'profile'
+        
   else
     data = {}
     data.query = req.query
@@ -17,14 +27,24 @@ module.exports = (componentName, doc, req) ->
                req.query.q + ' | pesquisa ' + baseTitle \
              else \
                baseTitle + ' - mais de 800 doulas em todas as regiões do Brasil'
-      description: 'Todas as doulas, todas as regiões.'
+      description: 'Todas as doulas, todas as regiões. A doula perfeita para você, seu parto e o seu filho está aqui.'
+      og:
+        url: 'http://doulas.club/'
+        title: if req.query and req.query.q then \
+                 req.query.q + ' | pesquisa ' + baseTitle \
+               else \
+                 'Encontre a sua doula ideal no doulas.club!'
+        site_name: 'doulas.club'
+        description: 'Mais de 800 doulas de todas as regiões do Brasil. A doula perfeita para você e seu parto está aqui.'
+        image: 'http://doulas.club/favicon.ico'
+        type: 'website'
 
   data.baseTitle = baseTitle
 
   """
 <!doctype html>
 
-<head>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# profile: http://ogp.me/ns/profile#">
   <meta charset="utf-8">
   <meta name=viewport content="width=device-width, initial-scale=1">
   <link rel="search" type="application/opensearchdescription+xml" href="/_ddoc/opensearch.xml" title="doulas.club">
@@ -33,6 +53,9 @@ module.exports = (componentName, doc, req) ->
   <link rel="stylesheet" href="/_ddoc/style.css">
   <title>#{meta.title}</title>
   <meta name="description" content="#{meta.description}">
+  #{("<meta property=\"og:#{k}\" content=\"#{v}\">" for k, v of meta.og when v).join('\n  ')}
+  #{"<meta property=\"fb:profile_id\" content=\"#{data.facebook}\">" if data.facebook}
+  <meta property="og:locale" content="pt_BR">
   <script>
     (function(t,r,a,c,k){k=r.createElement('script');k.type='text/javascript';
     k.async=true;k.src=a;k.id='ma';r.getElementsByTagName('head')[0].appendChild(k);
