@@ -176,6 +176,8 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
 
       if not @state.q
         document.title = @props.baseTitle
+      else
+        document.title = @state.q + ' | pesquisa ' + @props.baseTitle
 
       if history
         history.pushState {pushed: true, q: @state.q}, null, '/search?q=' + @state.q
