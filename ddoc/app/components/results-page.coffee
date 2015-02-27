@@ -17,6 +17,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
     defaultName: 'ResultsPage'
     mixins: [React.addons.LinkedStateMixin]
     getInitialState: ->
+      fetching: true
       q: @props.query.q or ''
       rows: @props.rows or []
   
@@ -107,7 +108,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
           )
         )
         (div
-          className: 'results'
+          className: 'results ' + if @state.rows.length then '' else 'no-rows'
           ref: 'results'
         ,
           (=>
@@ -120,7 +121,7 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
             return cards
           )() if @state.rows.length
         )
-        (div className: 'bottom-utils',
+        (div className: 'bottom-utils ' + (if @state.rows.length then '' else 'no-rows'),
           (button
             className: 'load-more'
             onClick: @actuallyFetch.bind @, @state.bookmark

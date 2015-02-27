@@ -9,7 +9,12 @@ module.exports = (componentName, doc, req) ->
   if doc and doc.nome
     data = doc
     description = doc.cidade + ". \n" + if doc.tel or doc.email then [].concat(doc.tel).concat(doc.email).join(', ') + (if doc.intro then '\n - ' + doc.intro else '') else if doc.intro then doc.intro.replace(/"/g, "'") else '\nInformações e contatos da doula ' + doc.nome + ', de ' + doc.cidade + '.'
-    data._foto = if Object.keys(doc._attachments).length then "http://doulas.club/#{doc._id}/#{Object.keys(doc._attachments)[0]}" else null
+
+    if doc._attachments
+      data._foto = if Object.keys(doc._attachments).length then "http://doulas.club/#{doc._id}/#{Object.keys(doc._attachments)[0]}" else null
+    else
+      data._foto = null
+
     meta =
       title: doc.nome + ' | ' + baseTitle
       description: description
