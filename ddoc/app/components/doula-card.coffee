@@ -6,7 +6,7 @@ factory = (React, marked) ->
 
   {html, body, meta, script, link, title,
    nav, div, iframe, ul, li, header, article,
-   span, a, h1, h2, h3, h4, img,
+   span, p, a, h1, h2, h3, h4, img,
    form, input, button} = React.DOM
 
   marked.setOptions
@@ -18,6 +18,9 @@ factory = (React, marked) ->
   DoulaCard = React.createFactory React.createClass
     getInitialState: ->
       iframe: false
+
+    componentWillMount: ->
+      @colors = @props.colors or window.colors or {}
   
     render: ->
       foto = null
@@ -58,9 +61,19 @@ factory = (React, marked) ->
         , (h2 {}, @props.nome)) if foto
         (div
           className: 'intro'
-          dangerouslySetInnerHTML:
-            __html: marked @props.intro
-        ) if @props.intro
+        ,
+          (div
+            dangerouslySetInnerHTML:
+              __html: marked @props.intro
+          ) if @props.intro
+          (p {},
+            (img
+              className: 'badge'
+              src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{@props['formação']}-#{@colors[@props['formação']]}.svg"
+              alt: "Formação: #{@props['formação']}"
+            )
+          ) if @props['formação']
+        )
         (iframe
           src: @props.iframe
         ) if @state.preload and @props.iframe and not window.mobile

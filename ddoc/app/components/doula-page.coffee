@@ -18,6 +18,9 @@ factory = (React, superagent, marked) ->
   DoulaPage = React.createClass
     getInitialState: -> {}
 
+    componentWillMount: ->
+      @colors = @props.colors or window.colors or {}
+
     componentDidMount: ->
       # watch persona events
       navigator.id.watch
@@ -40,7 +43,8 @@ factory = (React, superagent, marked) ->
           (div className: 'avatar full m-third l-third',
             (img
               itemProp: 'image'
-              className: 'u-photo', alt: "foto da doula #{@props.nome}"
+              className: 'u-photo',
+              alt: "foto da doula #{@props.nome}"
               src: @props._foto
             ) if @props._foto
             [
@@ -76,16 +80,6 @@ factory = (React, superagent, marked) ->
           )
           (div className: 'p-summary full m-third l-sixth',
             (ul {className: 'attrs-list'},
-              (li
-                itemProp: 'alumniOf'
-                itemScope: true
-                itemType: 'http://schema.org/EducationalOrganization'
-              , "formada pelo ",
-                (span
-                  itemProp: 'name'
-                  className: 'p-education'
-                , @props['formação'])
-              ) if @props['formação']
               (li className: 'p-experience h-event',
                 (span {className: 'p-name'}, "doula")
                 " desde "
@@ -114,6 +108,22 @@ factory = (React, superagent, marked) ->
               ) for email in [].concat @props.email if @props.email
               (li {key: site}, (a {href: site, title: site, target: '_blank'}, site)) for site in [].concat(@props.site) if @props.site
               (li {}, (a {href: @props.facebook, target: '_blank'}, 'facebook')) if @props.facebook
+              (li
+                itemProp: 'alumniOf'
+                itemScope: true
+                itemType: 'http://schema.org/EducationalOrganization'
+              ,
+                (span
+                  hidden: true
+                  itemProp: 'name'
+                  className: 'p-education'
+                , @props['formação'])
+                (img
+                  className: 'badge'
+                  src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{@props['formação']}-#{@colors[@props['formação']]}.svg"
+                  alt: "Formação: #{@props['formação']}"
+                )
+              ) if @props['formação']
             )
           )
           (div className: 'logo full m-third l-sixth',

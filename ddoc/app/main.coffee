@@ -51,6 +51,10 @@ module.exports = (componentName, doc, req) ->
         type: 'website'
 
   data.baseTitle = baseTitle
+  data.colors = {
+    'GAMA': '993300',
+    'ANDO': '0079B2'
+  }
 
   """
 <!doctype html>
@@ -82,6 +86,8 @@ module.exports = (componentName, doc, req) ->
 </body>
 
 <script>
+  colors = #{toJSON(data.colors)}
+
   require = {
     baseUrl: '/_ddoc',
     paths: {
@@ -121,5 +127,5 @@ module.exports = (componentName, doc, req) ->
     React.render(component(window.__data), document.body)
   })
   window.mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-</script>
+  </script>
   """

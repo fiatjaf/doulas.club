@@ -82,7 +82,7 @@ nav {
     overflow: hidden;
     max-height: 150px;
 
-    img {
+    img:not(.badge) {
       float: left;
       width: 40%;
       display: block;
@@ -212,7 +212,7 @@ nav {
 
     .avatar { }
 
-    img {
+    img:not(.badge) {
       height: 200px;
       display: block;
       margin: auto;
@@ -304,7 +304,8 @@ ul.attrs-list {
   }
 }
 
-img { border: 2px solid white; margin: 2px; }
+img:not(.badge) { border: 2px solid white; margin: 2px; }
+.badge { margin: 4px auto; height: 1.2em; }
 
 .footer {
   width: 100%;
