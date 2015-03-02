@@ -1,13 +1,16 @@
 (doc, req) ->
-  redirect = (url) ->
-    code: 302
+  redirect = (url, code=302) ->
+    code: code
     headers:
       Location: url
 
   path = req.path.slice 5
 
   if doc
-    return require('main')('doula-page', doc, req)
+    if doc.redirect
+      return redirect '/' + doc.redirect, 301
+    else
+      return require('main')('doula-page', doc, req)
   else
     if path.length == 1 and path[0] == 'search' and req.query.q
       return require('main')('results-page', {}, req)
