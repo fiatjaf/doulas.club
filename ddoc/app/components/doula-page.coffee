@@ -80,11 +80,6 @@ factory = (React, superagent, marked) ->
           )
           (div className: 'p-summary full m-third l-sixth',
             (ul {className: 'attrs-list'},
-              (li className: 'p-experience h-event',
-                (span {className: 'p-name'}, "doula")
-                " desde "
-                (span {className: 'dt-start', dateTime: @props.desde}, @props.desde)
-              ) if @props.desde
               (li
                 itemProp: 'address'
                 itemScope: true
@@ -124,6 +119,18 @@ factory = (React, superagent, marked) ->
                   alt: "Formação: #{@props['formação']}"
                 )
               ) if @props['formação']
+              (li className: 'p-experience h-event',
+                (span hidden: true,
+                  (span {className: 'p-name'}, "doula")
+                  " desde "
+                  (span {className: 'dt-start', dateTime: @props.desde}, @props.desde)
+                )
+                (img
+                  className: 'badge'
+                  src: "https://img.shields.io/badge/desde-#{@props.desde}-yellow.svg"
+                  alt: "doula desde #{@props.desde}"
+                )
+              ) if @props.desde
             )
           )
           (div className: 'logo full m-third l-sixth',

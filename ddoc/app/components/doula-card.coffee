@@ -66,13 +66,20 @@ factory = (React, marked) ->
             dangerouslySetInnerHTML:
               __html: marked @props.intro
           ) if @props.intro
-          (p {},
+          (span {},
             (img
               className: 'badge'
               src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{@props['formação']}-#{@colors[@props['formação']]}.svg"
               alt: "Formação: #{@props['formação']}"
             )
           ) if @props['formação']
+          (span {},
+            (img
+              className: 'badge'
+              src: "https://img.shields.io/badge/desde-#{@props.desde}-yellow.svg"
+              alt: "doula desde #{@props.desde}"
+            )
+          ) if @props.desde
         )
         (iframe
           src: @props.iframe
