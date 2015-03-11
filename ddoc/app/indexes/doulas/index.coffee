@@ -1,4 +1,7 @@
 (doc) ->
+  if not doc.cidade or doc.inativo
+    return
+
   boost =
     (if doc.foto then 2 else 1) +
     (if doc.iframe then 1.9 else 1) +
