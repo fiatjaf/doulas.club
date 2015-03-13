@@ -52,8 +52,9 @@ module.exports = (componentName, doc, req) ->
 
   data.baseTitle = baseTitle
   data.colors = {
-    'GAMA': '993300',
+    'GAMA': '993300'
     'ANDO': '0079B2'
+    'Naoli Vinaver': '503B9D'
   }
 
   """
