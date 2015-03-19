@@ -66,13 +66,13 @@ factory = (React, marked) ->
             dangerouslySetInnerHTML:
               __html: marked @props.intro
           ) if @props.intro
-          (span {},
+          (span key: f,
             (img
               className: 'badge'
-              src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{@props['formação']}-#{@colors[@props['formação']]}.svg"
-              alt: "Formação: #{@props['formação']}"
+              src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{f}-#{@colors[f]}.svg"
+              alt: "Formação: #{f}"
             )
-          ) if @props['formação']
+          ) for f in [].concat @props['formação'] when f
           (span {},
             (img
               className: 'badge'

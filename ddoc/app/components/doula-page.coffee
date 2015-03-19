@@ -107,18 +107,19 @@ factory = (React, superagent, marked) ->
                 itemProp: 'alumniOf'
                 itemScope: true
                 itemType: 'http://schema.org/EducationalOrganization'
+                key: f
               ,
                 (span
                   hidden: true
                   itemProp: 'name'
                   className: 'p-education'
-                , @props['formação'])
+                , f)
                 (img
                   className: 'badge'
-                  src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{@props['formação']}-#{@colors[@props['formação']]}.svg"
-                  alt: "Formação: #{@props['formação']}"
+                  src: "https://img.shields.io/badge/forma%C3%A7%C3%A3o-#{f}-#{@colors[f]}.svg"
+                  alt: "Formação: #{f}"
                 )
-              ) if @props['formação']
+              ) for f in [].concat @props['formação'] when f
               (li className: 'p-experience h-event',
                 (span hidden: true,
                   (span {className: 'p-name'}, "doula")

@@ -54,6 +54,8 @@ module.exports = (componentName, doc, req) ->
   data.colors = {
     'GAMA': '993300'
     'ANDO': '0079B2'
+    'Cais do Parto': 'E1B643'
+    'Instituto Cândida Vargas': '8F8C87'
     'Naoli Vinaver': '503B9D'
   }
 
