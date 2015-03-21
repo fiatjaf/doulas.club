@@ -66,8 +66,6 @@ module.exports = (componentName, doc, req) ->
   <meta charset="utf-8">
   <meta name=viewport content="width=device-width, initial-scale=1">
   <link rel="search" type="application/opensearchdescription+xml" href="/_ddoc/opensearch.xml" title="doulas.club">
-  <link rel="stylesheet" href="//cdn.rawgit.com/picnicss/picnic/master/releases/v1.1.min.css">
-  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cookie|Noto+Sans">
   <link rel="stylesheet" href="/_ddoc/style.css">
   <title>#{meta.title}</title>
   <meta name="description" content="#{meta.description}">
