@@ -111,8 +111,8 @@ module.exports = (componentName, doc, req) ->
         'lib/masonry'
        ],
       'imagesloaded': [
-        '//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min',
-        'lib/imagesloaded'
+        'lib/imagesloaded',
+        '//rawgit.com/desandro/imagesloaded/b8465933e73bdbf689123c304d9d25986cdedfe1/imagesloaded.pkgd.min'
        ],
     }
   }
