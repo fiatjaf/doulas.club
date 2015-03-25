@@ -18,7 +18,7 @@
       return require('main')('results-page', {}, req)
     else if path.length == 0 and not req.query.q
       return require('main')('results-page', {}, req)
-    else if 'q' of req.query.q
+    else if 'q' of req.query
       return redirect '/search?q=' + req.query.q
     else
       return redirect '/'
