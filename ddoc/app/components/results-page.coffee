@@ -182,8 +182,8 @@ factory = (React, superagent, pouchCollate, DoulaCard) ->
 
       if history
         history.pushState {pushed: true, q: @state.q}, null, '/search?q=' + @state.q
-      if typeof ma == 'function'
-        ma 'search', @state.q
+      if typeof ga == 'function'
+        ga 'send', 'event', 'search', @state.q
 
       @fetch(true)
 
