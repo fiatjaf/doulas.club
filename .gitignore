@@ -1,7 +1,11 @@
 *.swp
 *.swo
-node_modules
-docs/_attachments/*
 *.pyc
 *.pyo
 *.css
+node_modules
+docs/*
+crawlers/*
+parsers/*
+scripts/*
+.env
