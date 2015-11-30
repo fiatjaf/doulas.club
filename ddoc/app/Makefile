@@ -11,5 +11,5 @@ couch-ddoc:
 	rsync -rtvu components/ _attachments/components
 	rsync -rtvu lib/ _attachments/lib
 	#minify _attachments/components/
-	lessc --clean-css style.less _attachments/style.css
+	./node_modules/.bin/lessc --clean-css style.less _attachments/style.css
 	couchapp push . http://heremeddesedenumforestry:lwhjgjsuCIBTYEMLlMSWXrj8@fiatjaf.cloudant.com/doulas
